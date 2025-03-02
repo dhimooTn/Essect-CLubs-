@@ -381,3 +381,156 @@ body.dark-mode .footer-section ul li a:hover {
 .footer-section ul li a:hover {
     color: #e87c5c;
 }
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: rgba(255, 255, 255, 0.9); /* Fond semi-transparent */
+    backdrop-filter: blur(10px); /* Effet de flou */
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    margin: auto;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.modal-content .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+.modal-content .close:hover {
+    color: #e87c5c;
+}
+
+.modal-content h2 {
+    font-size: 2rem;
+    color: #e87c5c;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center; /* Centrer les champs */
+}
+
+.modal-content .form-group {
+    width: 100%;
+    max-width: 400px;
+    text-align: left;
+}
+
+.modal-content .form-control {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    background-color: rgba(255, 255, 255, 0.8); /* Fond semi-transparent */
+    backdrop-filter: blur(5px); /* Effet de flou */
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.modal-content .form-control:focus {
+    border-color: #e87c5c;
+    box-shadow: 0 0 8px rgba(232, 124, 92, 0.5);
+    outline: none;
+}
+
+/* Styles pour les labels */
+.modal-content .form-label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Styles pour les boutons radio et cases à cocher */
+.modal-content .form-check {
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.modal-content .form-check-input {
+    margin-right: 10px;
+}
+
+.modal-content .form-check-label {
+    font-weight: 500;
+    color: #555;
+}
+
+/* Styles pour le bouton de soumission */
+.modal-content .btn-primary {
+    background-color: #e87c5c;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-top: 20px;
+}
+
+.modal-content .btn-primary:hover {
+    background-color: #d86a4a;
+    transform: translateY(-2px);
+}
+
+/* Styles pour les messages d'erreur (optionnel) */
+.modal-content .error-message {
+    color: #ff4d4d;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    display: none; /* Masqué par défaut */
+}
+
+/* Styles pour les champs désactivés */
+.modal-content .form-control:disabled,
+.modal-content .form-check-input:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+}
+
+/* Responsive Design pour le formulaire */
+@media (max-width: 768px) {
+    .modal-content {
+        padding: 20px;
+    }
+
+    .modal-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .modal-content .form-control {
+        padding: 10px;
+    }
+
+    .modal-content .btn-primary {
+        padding: 10px 20px;
+    }
+}

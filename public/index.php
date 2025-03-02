@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <!--navbar-->
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand me-auto" href="#">EssectClubs</a>
@@ -39,7 +39,7 @@
                     </ul>
                 </div>
             </div>
-            <a href="#" class="login-button">Login</a>
+            <button id="openModal" class="login-button">Login</button>
             <button id="dark-mode-toggle" class="dark-mode-button" aria-label="Toggle dark mode">🌙</button>
             <button class="navbar-toggler pe-0" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
@@ -47,75 +47,236 @@
             </button>
         </div>
     </nav>
-    <!--end --navbar-->
+    <!-- Fin de la Navbar -->
 
-    <!--header section-->
+    <!-- Modal de Login -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1">
+                </div>
+                <button class="btn btn-primary" type="submit">Submit form</button>
+            </form>
+        </div>
+    </div>
+    <!-- Fin de la Modal de Login -->
+
+    <!-- Header Section -->
     <header class="header-section section-animation">
         <a href="#" class="discover-button">Discover</a>
     </header>
-    <!--end --header section-->
+    <!-- Fin de la Header Section -->
 
-    <!-- InfoLab section -->
+    <!-- InfoLab Section -->
     <section class="infoLab-section club-section section-animation delay-1">
         <img src="upload/LogoInfolab.png" alt="InfoLab Logo" class="club-logo">
         <h2 class="club-name">InfoLab</h2>
         <div class="club-background">
             <div class="club-content">
-                <a href="#" class="join-button">Join</a>
+                <!-- Bouton pour ouvrir la modal -->
+                <button id="openModalInfolab" class="join-button">Join</button>
+
+                <!-- Modal pour InfoLab -->
+                <div id="modalInfolab" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Rejoignez la famille InfoLAB</h2>
+                        <form id="infolabForm">
+                            <!-- Formulaire -->
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" class="form-control" placeholder="First name"
+                                        aria-label="First name">
+                                </div>
+                                <div class="col">
+                                    <input type="text" class="form-control" placeholder="Last name"
+                                        aria-label="Last name">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="exampleFormControlInput1"
+                                    placeholder="name@example.com">
+                            </div>
+                            <div class="mb-3">
+                                <label for="formGroupExampleInput" class="form-label">Phone Number</label>
+                                <input type="number" class="form-control" id="formGroupExampleInput"
+                                    placeholder="Example input placeholder">
+                            </div>
+                            <div class="mb-3">
+                                <label for="basic-url" class="form-label">Your Facebook URL</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon3">https://example.com/users/</span>
+                                    <input type="text" class="form-control" id="basic-url"
+                                        aria-describedby="basic-addon3 basic-addon4">
+                                </div>
+                            </div>
+                            <label class="form-label">Vous êtes en ?</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="niveau" id="l1" value="L1">
+                                <label class="form-check-label" for="l1">L1</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="niveau" id="l2" value="L2">
+                                <label class="form-check-label" for="l2">L2</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="niveau" id="l3" value="L3">
+                                <label class="form-check-label" for="l3">L3</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="niveau" id="m1" value="M1">
+                                <label class="form-check-label" for="m1">M1</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="niveau" id="m2" value="M2">
+                                <label class="form-check-label" for="m2">M2</label>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" class="form-control" placeholder="Votre Specialité"
+                                        aria-label="Votre Specialité">
+                                </div>
+                            </div>
+                            <label class="form-label">Avez-vous déjà fait partie d'un club universitaire ou associatif
+                                ?</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="club_experience" id="oui"
+                                    value="oui">
+                                <label class="form-check-label" for="oui">Oui</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="club_experience" id="non"
+                                    value="non">
+                                <label class="form-check-label" for="non">Non</label>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" class="form-control"
+                                        placeholder="Si oui, précisez le(s) club(s) et votre rôle"
+                                        aria-label="Si oui, précisez le(s) club(s) et votre rôle">
+                                </div>
+                            </div>
+                            <label class="form-label">Quelles compétences ou expériences possédez-vous en lien avec le
+                                domaine du club ?</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="gestion_projet"
+                                    value="gestion_projet">
+                                <label class="form-check-label" for="gestion_projet">Gestion de projet</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="communication"
+                                    value="communication">
+                                <label class="form-check-label" for="communication">Communication</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="design_graphique"
+                                    value="design_graphique">
+                                <label class="form-check-label" for="design_graphique">Design graphique</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="organisation_evenements"
+                                    value="organisation_evenements">
+                                <label class="form-check-label" for="organisation_evenements">Organisation
+                                    d’événements</label>
+                            </div>
+                            <label class="form-label">Dans quel département vous voyez-vous le plus ?</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="departement" id="comm" value="comm">
+                                <label class="form-check-label" for="comm">Comm</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="departement" id="design"
+                                    value="design">
+                                <label class="form-check-label" for="design">Design</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="departement" id="event"
+                                    value="event">
+                                <label class="form-check-label" for="event">Event</label>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleFormControlTextarea1" class="form-label">Pourquoi souhaitez-vous
+                                    rejoindre ce club ?</label>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            </div>
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected>Quand serez-vous disponible pour passer un entretien cette semaine ?
+                                </option>
+                                <option value="1">Lundi</option>
+                                <option value="2">Mardi</option>
+                                <option value="3">Mercredi</option>
+                                <option value="4">Jeudi</option>
+                                <option value="5">Vendredi</option>
+                                <option value="6">Samedi</option>
+                            </select>
+                            <label for="cv">Télécharger votre CV (PDF, DOC, DOCX) :</label>
+                            <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx" required><br><br>
+                            <div class="col-12">
+                                <button class="btn btn-primary" type="submit">Submit form</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <!-- Section "Our Team" -->
         <div class="our-team-section">
-            <h3>Bureau Memebre</h3>
+            <h3>Bureau Membre</h3>
             <div class="team-members">
                 <div class="team-member">
-                    <img src="upload/Nour.png" >
+                    <img src="upload/Nour.png" alt="Nour Cherni">
                     <h4>Nour Cherni</h4>
                     <p>President</p>
                 </div>
                 <div class="team-member">
-                    <img src="upload/seif.png" >
+                    <img src="upload/seif.png" alt="Saief Bouali">
                     <h4>Saief Bouali</h4>
-                    <p>Vice President</p>
+                    <p>Vice President & Trésorière</p>
                 </div>
                 <div class="team-member">
-                    <img src="upload/amen.png" >
+                    <img src="upload/amen.png" alt="Amenallah Robanna">
                     <h4>Amenallah Robanna</h4>
                     <p>Human Ressource</p>
                 </div>
                 <div class="team-member">
-                    <img src="upload/Khdija.png" >
-                    <h4>Khadija Majdoub</h4>
-                    <p>Trésorière</p>
-                </div>
-                <div class="team-member">
-                    <img src="upload/sta.png" >
+                    <img src="upload/sta.png" alt="Yasmine Ben Sta">
                     <h4>Yasmine Ben Sta</h4>
                     <p>Secrétaire Générale</p>
                 </div>
                 <div class="team-member">
-                    <img src="upload/jha.png">
+                    <img src="upload/jha.png" alt="Wassim Jha">
                     <h4>Wassim Jha</h4>
                     <p>Chef Département Communication</p>
                 </div>
                 <div class="team-member">
-                    <img src="upload/iheb.png" >
+                    <img src="upload/iheb.png" alt="Iheb Baccar">
                     <h4>Iheb Baccar</h4>
                     <p>Chef Département Event</p>
                 </div>
                 <div class="team-member">
-                    <img src="upload/maha.png" >
+                    <img src="upload/maha.png" alt="Maha Nourdine">
                     <h4>Maha Nourdine</h4>
-                    <p>Chef Département Desgin </p>
+                    <p>Chef Département Design</p>
                 </div>
             </div>
         </div>
     </section>
-    <!-- end --infolab section -->
+    <!-- Fin de la InfoLab Section -->
 
-    <!--Enactus section-->
+    <!-- Enactus Section -->
     <section class="enactus-section club-section section-animation delay-1">
-    <img src="upload/enactusLogo.png" alt="Enactus Logo" class="club-logo">
-    <h2 class="club-name">Enactus</h2>
+        <img src="upload/enactusLogo.png" alt="Enactus Logo" class="club-logo">
+        <h2 class="club-name">Enactus</h2>
         <div class="club-background">
             <div class="club-content">
                 <a href="#" class="join-button">Join</a>
@@ -125,28 +286,29 @@
             <h3>Our Team</h3>
             <div class="team-members">
                 <div class="team-member">
-                    <img src="upload/rayen.png">
-                    
+                    <img src="upload/rayen.png" alt="Rayen">
+                    <h4>Rayen</h4>
+                    <p>President</p>
                 </div>
                 <div class="team-member">
-                    <img src="public/team/member5.jpg" alt="Member 5">
+                    <img src="upload/member5.jpg" alt="Emily Davis">
                     <h4>Emily Davis</h4>
                     <p>Vice President</p>
                 </div>
                 <div class="team-member">
-                    <img src="public/team/member6.jpg" alt="Member 6">
+                    <img src="upload/member6.jpg" alt="David Wilson">
                     <h4>David Wilson</h4>
                     <p>Project Manager</p>
                 </div>
             </div>
         </div>
     </section>
-    <!--end --Enactus section-->
+    <!-- Fin de la Enactus Section -->
 
-    <!--ClubRadio section-->
+    <!-- ClubRadio Section -->
     <section class="clubRadio-section club-section section-animation delay-1">
-    <img src="upload/clubradioessect.jpg" alt="ClubRadio Logo" class="club-logo">
-    <h2 class="club-name">ClubRadio</h2>
+        <img src="upload/clubradioessect.jpg" alt="ClubRadio Logo" class="club-logo">
+        <h2 class="club-name">ClubRadio</h2>
         <div class="club-background">
             <div class="club-content">
                 <a href="#" class="join-button">Join</a>
@@ -156,26 +318,26 @@
             <h3>Our Team</h3>
             <div class="team-members">
                 <div class="team-member">
-                    <img src="public/team/member7.jpg" alt="Member 7">
+                    <img src="upload/member7.jpg" alt="Sarah Lee">
                     <h4>Sarah Lee</h4>
                     <p>President</p>
                 </div>
                 <div class="team-member">
-                    <img src="public/team/member8.jpg" alt="Member 8">
+                    <img src="upload/member8.jpg" alt="Chris Evans">
                     <h4>Chris Evans</h4>
                     <p>Vice President</p>
                 </div>
                 <div class="team-member">
-                    <img src="public/team/member9.jpg" alt="Member 9">
+                    <img src="upload/member9.jpg" alt="Laura Green">
                     <h4>Laura Green</h4>
                     <p>Project Manager</p>
                 </div>
             </div>
         </div>
     </section>
-    <!--end --ClubRadio section-->
+    <!-- Fin de la ClubRadio Section -->
 
-    <!--Map section-->
+    <!-- Map Section -->
     <section id="map" class="section-animation">
         <h5><strong>Our location</strong></h5>
         <div class="mapHome">
@@ -191,9 +353,9 @@
             </div>
         </div>
     </section>
-    <!--end --Map section-->
+    <!-- Fin de la Map Section -->
 
-    <!--footer section-->
+    <!-- Footer Section -->
     <footer class="footer-section">
         <div class="container">
             <div class="row">
@@ -235,29 +397,12 @@
             </div>
         </div>
     </footer>
-    <!--end --footer section-->
+    <!-- Fin de la Footer Section -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-    <script>
-        // Dark Mode Toggle avec sauvegarde dans localStorage
-        const darkModeToggle = document.getElementById('dark-mode-toggle');
-        const body = document.body;
-
-        // Vérifie le mode précédent
-        if (localStorage.getItem('dark-mode') === 'enabled') {
-            body.classList.add('dark-mode');
-            darkModeToggle.textContent = '☀️';
-        }
-
-        darkModeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            const isDarkMode = body.classList.contains('dark-mode');
-            darkModeToggle.textContent = isDarkMode ? '☀️' : '🌙';
-            localStorage.setItem('dark-mode', isDarkMode ? 'enabled' : 'disabled');
-        });
-    </script>
+    <script src="script.js"></script> <!-- Lien vers le fichier JavaScript externe -->
 </body>
 
 </html>
