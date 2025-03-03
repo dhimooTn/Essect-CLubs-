@@ -55,7 +55,6 @@ class FormValidator {
     }
 
     isValid() {
-        // Cette méthode doit être implémentée dans les classes enfants
         throw new Error("La méthode isValid() doit être implémentée.");
     }
 
@@ -65,7 +64,7 @@ class FormValidator {
     }
 
     validatePhone(phone) {
-        const regex = /^\d{8}$/; // Exemple : 8 chiffres pour un numéro tunisien
+        const regex = /^\d{8}$/;
         return regex.test(phone);
     }
 
@@ -76,10 +75,6 @@ class FormValidator {
 
 // Classe pour valider le formulaire de login
 class LoginFormValidator extends FormValidator {
-    constructor(formId) {
-        super(formId);
-    }
-
     isValid() {
         const email = this.form.querySelector("#exampleInputEmail1").value;
         const password = this.form.querySelector("#exampleInputPassword1").value;
@@ -105,10 +100,6 @@ class LoginFormValidator extends FormValidator {
 
 // Classe pour valider le formulaire InfoLab
 class InfoLabFormValidator extends FormValidator {
-    constructor(formId) {
-        super(formId);
-    }
-
     isValid() {
         const firstName = this.form.querySelector("input[placeholder='First name']").value;
         const lastName = this.form.querySelector("input[placeholder='Last name']").value;
@@ -126,7 +117,7 @@ class InfoLabFormValidator extends FormValidator {
             return false;
         }
 
-        if (!this.validatePhone(phone)) {
+        if (!this.validatePhone(phone) && phone.length !=8 ) {
             alert("Veuillez entrer un numéro de téléphone valide.");
             return false;
         }
@@ -140,6 +131,10 @@ class InfoLabFormValidator extends FormValidator {
         return true;
     }
 }
+
+// Classe pour valider le formulaire Enactus
+class EnactusFormValidator extends InfoLabFormValidator {}
+class ClubRadioFormValidator extends InfoLabFormValidator {}
 
 // Dark Mode Toggle
 const darkModeToggle = document.getElementById('dark-mode-toggle');
@@ -160,7 +155,11 @@ darkModeToggle.addEventListener('click', () => {
 // Initialisation des modales
 const loginModal = new Modal("loginModal", "openModal", ".close");
 const infolabModal = new Modal("modalInfolab", "openModalInfolab", ".close");
+const enactusModal = new Modal("modalEnactus", "openModalEnactus", ".close"); // Correction du nom de variable
+const clubRadioModal = new Modal("modalClubRadio", "openModalClubRadio", ".close"); // Correction du nom de variable
 
 // Initialisation des validateurs de formulaire
 const loginFormValidator = new LoginFormValidator("loginForm");
 const infolabFormValidator = new InfoLabFormValidator("infolabForm");
+const enactusFormValidator = new EnactusFormValidator("EnactusForm"); // Correction du nom de variable
+const clubRadioFormValidator = new ClubRadioFormValidator("ClubRadioForm"); // Correction du nom de variable
