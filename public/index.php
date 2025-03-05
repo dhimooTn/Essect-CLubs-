@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Prachason+Neue&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css"> <!-- Lien vers le fichier CSS externe -->
+    <link rel="stylesheet" href="..\public\asstes\style.css"> <!-- Lien vers le fichier CSS externe -->
 </head>
 
 <body>
@@ -63,7 +63,7 @@
                     <label for="exampleInputPassword1" class="form-label">Password</label>
                     <input type="password" class="form-control" id="exampleInputPassword1">
                 </div>
-                <button class="btn btn-primary" type="submit">Submit form</button>
+                <button class="btn btn-primary" type="submit">Login</button>
             </form>
         </div>
     </div>
@@ -756,7 +756,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-    <script src="script.js"></script> <!-- Lien vers le fichier JavaScript externe -->
+    <script src="../public/asstes/script.js"></script> <!-- Lien vers le fichier JavaScript externe -->
 </body>
 
 </html>

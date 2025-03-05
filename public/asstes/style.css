@@ -125,7 +125,7 @@ body.dark-mode .footer-section ul li a:hover {
 
 /* Header Section */
 .header-section {
-    background: url(upload/headerclubs.png) no-repeat center center;
+    background: url('../upload/headerclubs.png') no-repeat center center;
     background-size: cover;
     height: 100vh;
     width: 100%;
@@ -336,17 +336,17 @@ body.dark-mode .footer-section ul li a:hover {
 
 /* InfoLab Section */
 .infoLab-section .club-background {
-    background-image: url(upload/Infolabsection.png);
+    background-image: url(../upload/Infolabsection.png);
 }
 
 /* Enactus Section */
 .enactus-section .club-background {
-    background-image: url(upload/Enactussection.png);
+    background-image: url(../upload/Enactussection.png);
 }
 
 /* ClubRadio Section */
 .clubRadio-section .club-background {
-    background-image: url(upload/ClubRadioEssct.png);
+    background-image: url(../upload/ClubRadioEssct.png);
 }
 
 /* Footer */
