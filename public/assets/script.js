@@ -163,3 +163,11 @@ const loginFormValidator = new LoginFormValidator("loginForm");
 const infolabFormValidator = new InfoLabFormValidator("infolabForm");
 const enactusFormValidator = new EnactusFormValidator("EnactusForm"); // Correction du nom de variable
 const clubRadioFormValidator = new ClubRadioFormValidator("ClubRadioForm"); // Correction du nom de variable
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+});

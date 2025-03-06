@@ -56,6 +56,15 @@ body.dark-mode .footer-section ul li a:hover {
 /* Barre de navigation */
 .navbar {
     background-color: rgba(255, 255, 255, 0.5);
+    -webkit-backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     height: 80px;
     margin: 20px;
@@ -352,7 +361,6 @@ body.dark-mode .footer-section ul li a:hover {
 /* Footer */
 .footer-section {
     background-color: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(10px);
     padding: 40px 0;
     margin-top: 40px;
     border-top: 1px solid #e9ecef;
@@ -398,6 +406,7 @@ body.dark-mode .footer-section ul li a:hover {
 
 .modal-content {
     background-color: rgba(255, 255, 255, 0.9); /* Fond semi-transparent */
+    -webkit-backdrop-filter: blur(10px); /* Effet de flou pour Safari */
     backdrop-filter: blur(10px); /* Effet de flou */
     padding: 30px;
     border-radius: 15px;
@@ -450,6 +459,8 @@ body.dark-mode .footer-section ul li a:hover {
     border: 1px solid #ccc;
     font-size: 1rem;
     background-color: rgba(255, 255, 255, 0.8); /* Fond semi-transparent */
+    -webkit-backdrop-filter: blur(5px); /* Effet de flou pour Safari */
+    backdrop-filter: blur(5px); /* Effet de flou */
     backdrop-filter: blur(5px); /* Effet de flou */
     transition: border-color 0.3s, box-shadow 0.3s;
 }

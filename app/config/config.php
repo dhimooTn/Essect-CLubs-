@@ -1,7 +1,7 @@
 <?php 
 
 // define pase url for the project 
-define("BURL","http://localhost:800/");
+define("BURL","http://essect.clubs/");
 
 
 /**

@@ -8,7 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Prachason+Neue&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="..\public\asstes\style.css"> <!-- Lien vers le fichier CSS externe -->
+    <link rel="stylesheet" href="../public/assets/style.css">
+    <!-- Lien vers le fichier CSS externe -->
 </head>
 
 <body>
@@ -25,16 +26,16 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                            <a class="nav-link active" aria-current="page" href="#header">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="#">InfoLab</a>
+                            <a class="nav-link mx-lg-2" href="#infolab">InfoLab</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="#">Enactus</a>
+                            <a class="nav-link mx-lg-2" href="#enactus">Enactus</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="#">ClubRadio</a>
+                            <a class="nav-link mx-lg-2" href="#clubradio">ClubRadio</a>
                         </li>
                     </ul>
                 </div>
@@ -54,7 +55,7 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Login</h2>
-            <form id="loginForm">
+            <form id="loginForm" action="app\controllers\SessionController.php" action="POST">
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Email address</label>
                     <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
@@ -70,13 +71,13 @@
     <!-- Fin de la Modal de Login -->
 
     <!-- Header Section -->
-    <header class="header-section section-animation">
-        <a href="#" class="discover-button">Discover</a>
+    <header id="header" class="header-section section-animation">
+        <a href="#infolab" class="discover-button">Discover</a>
     </header>
     <!-- Fin de la Header Section -->
 
     <!-- InfoLab Section -->
-    <section class="infoLab-section club-section section-animation delay-1">
+    <section id="infolab" class="infoLab-section club-section section-animation delay-1">
         <img src="upload/LogoInfolab.png" alt="InfoLab Logo" class="club-logo">
         <h2 class="club-name">InfoLab</h2>
         <div class="club-background">
@@ -89,33 +90,33 @@
                     <div class="modal-content">
                         <span class="close">&times;</span>
                         <h2>Rejoignez la famille InfoLAB</h2>
-                        <form id="infolabForm">
+                        <form id="infolabForm" action="app\controllers\RequestController.php" method="POST">
                             <!-- Formulaire -->
                             <div class="row">
                                 <div class="col">
-                                    <input type="text" class="form-control" placeholder="First name"
+                                    <input type="text" class="form-control" placeholder="First name" name="first_name"
                                         aria-label="First name">
                                 </div>
                                 <div class="col">
-                                    <input type="text" class="form-control" placeholder="Last name"
+                                    <input type="text" class="form-control" placeholder="Last name" name="last_name"
                                         aria-label="Last name">
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                                <input type="email" class="form-control" id="exampleFormControlInput1"
+                                <input type="email" class="form-control" id="exampleFormControlInput1" name="email"
                                     placeholder="name@example.com">
                             </div>
                             <div class="mb-3">
                                 <label for="formGroupExampleInput" class="form-label">Phone Number</label>
-                                <input type="number" class="form-control" id="formGroupExampleInput"
+                                <input type="number" class="form-control" id="formGroupExampleInput" name="phone_number"
                                     placeholder="Example input placeholder">
                             </div>
                             <div class="mb-3">
                                 <label for="basic-url" class="form-label">Your Facebook URL</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon3">https://example.com/users/</span>
-                                    <input type="text" class="form-control" id="basic-url"
+                                    <input type="text" class="form-control" id="basic-url" name="facebook_url"
                                         aria-describedby="basic-addon3 basic-addon4">
                                 </div>
                             </div>
@@ -143,7 +144,7 @@
                             <div class="row">
                                 <div class="col">
                                     <input type="text" class="form-control" placeholder="Votre Specialité"
-                                        aria-label="Votre Specialité">
+                                        name="specialite" aria-label="Votre Specialité">
                                 </div>
                             </div>
                             <label class="form-label">Avez-vous déjà fait partie d'un club universitaire ou associatif
@@ -161,30 +162,30 @@
                             <div class="row">
                                 <div class="col">
                                     <input type="text" class="form-control"
-                                        placeholder="Si oui, précisez le(s) club(s) et votre rôle"
+                                        placeholder="Si oui, précisez le(s) club(s) et votre rôle" name="club_details"
                                         aria-label="Si oui, précisez le(s) club(s) et votre rôle">
                                 </div>
                             </div>
                             <label class="form-label">Quelles compétences ou expériences possédez-vous en lien avec le
                                 domaine du club ?</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="gestion_projet"
+                                <input class="form-check-input" type="checkbox" id="gestion_projet" name="competences[]"
                                     value="gestion_projet">
                                 <label class="form-check-label" for="gestion_projet">Gestion de projet</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="communication"
+                                <input class="form-check-input" type="checkbox" id="communication" name="competences[]"
                                     value="communication">
                                 <label class="form-check-label" for="communication">Communication</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="design_graphique"
-                                    value="design_graphique">
+                                    name="competences[]" value="design_graphique">
                                 <label class="form-check-label" for="design_graphique">Design graphique</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="organisation_evenements"
-                                    value="organisation_evenements">
+                                    name="competences[]" value="organisation_evenements">
                                 <label class="form-check-label" for="organisation_evenements">Organisation
                                     d’événements</label>
                             </div>
@@ -206,9 +207,10 @@
                             <div class="mb-3">
                                 <label for="exampleFormControlTextarea1" class="form-label">Pourquoi souhaitez-vous
                                     rejoindre ce club ?</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" name="motivation"
+                                    rows="3"></textarea>
                             </div>
-                            <select class="form-select" aria-label="Default select example">
+                            <select class="form-select" aria-label="Default select example" name="entretien_jour">
                                 <option selected>Quand serez-vous disponible pour passer un entretien cette semaine ?
                                 </option>
                                 <option value="1">Lundi</option>
@@ -224,6 +226,7 @@
                                 <button class="btn btn-primary" type="submit">Submit form</button>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -274,7 +277,7 @@
     <!-- Fin de la InfoLab Section -->
 
     <!-- Enactus Section -->
-    <section class="enactus-section club-section section-animation delay-1">
+    <section id="enactus" class="enactus-section club-section section-animation delay-1">
         <img src="upload/enactusLogo.png" alt="Enactus Logo" class="club-logo">
         <h2 class="club-name">Enactus</h2>
         <div class="club-background">
@@ -287,78 +290,78 @@
                     <div class="modal-content">
                         <span class="close">&times;</span>
                         <h2>Rejoignez la famille Enactus</h2>
-                        <form id="EnactusForm">
+                        <form id="EnactusForm" action="app\controllers\RequestController.php" method="POST">
                             <!-- Formulaire -->
                             <div class="row">
                                 <div class="col">
-                                    <input type="text" class="form-control" placeholder="First name"
-                                        aria-label="First name">
+                                    <input type="text" class="form-control" name="first_name" placeholder="First name"
+                                        aria-label="First name" required>
                                 </div>
                                 <div class="col">
-                                    <input type="text" class="form-control" placeholder="Last name"
-                                        aria-label="Last name">
+                                    <input type="text" class="form-control" name="last_name" placeholder="Last name"
+                                        aria-label="Last name" required>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                                <input type="email" class="form-control" id="exampleFormControlInput1"
-                                    placeholder="name@example.com">
+                                <input type="email" class="form-control" id="exampleFormControlInput1" name="email"
+                                    placeholder="name@example.com" required>
                             </div>
                             <div class="mb-3">
                                 <label for="formGroupExampleInput" class="form-label">Phone Number</label>
-                                <input type="number" class="form-control" id="formGroupExampleInput"
-                                    placeholder="Example input placeholder">
+                                <input type="number" class="form-control" id="formGroupExampleInput" name="phone_number"
+                                    placeholder="Example input placeholder" required>
                             </div>
                             <div class="mb-3">
                                 <label for="basic-url" class="form-label">Your Facebook URL</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon3">https://example.com/users/</span>
-                                    <input type="text" class="form-control" id="basic-url"
+                                    <input type="text" class="form-control" id="basic-url" name="facebook_url"
                                         aria-describedby="basic-addon3 basic-addon4">
                                 </div>
                             </div>
                             <label class="form-label">Vous êtes en ?</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="niveau" id="l1" value="L1">
+                                <input class="form-check-input" type="radio" name="niveau" id="l1" value="L1" required>
                                 <label class="form-check-label" for="l1">L1</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="niveau" id="l2" value="L2">
+                                <input class="form-check-input" type="radio" name="niveau" id="l2" value="L2" required>
                                 <label class="form-check-label" for="l2">L2</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="niveau" id="l3" value="L3">
+                                <input class="form-check-input" type="radio" name="niveau" id="l3" value="L3" required>
                                 <label class="form-check-label" for="l3">L3</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="niveau" id="m1" value="M1">
+                                <input class="form-check-input" type="radio" name="niveau" id="m1" value="M1" required>
                                 <label class="form-check-label" for="m1">M1</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="niveau" id="m2" value="M2">
+                                <input class="form-check-input" type="radio" name="niveau" id="m2" value="M2" required>
                                 <label class="form-check-label" for="m2">M2</label>
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <input type="text" class="form-control" placeholder="Votre Specialité"
-                                        aria-label="Votre Specialité">
+                                    <input type="text" class="form-control" name="specialite"
+                                        placeholder="Votre Specialité" aria-label="Votre Specialité" required>
                                 </div>
                             </div>
                             <label class="form-label">Avez-vous déjà fait partie d'un club universitaire ou associatif
                                 ?</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="club_experience" id="oui"
-                                    value="oui">
+                                <input class="form-check-input" type="radio" name="club_experience" id="oui" value="oui"
+                                    required>
                                 <label class="form-check-label" for="oui">Oui</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="club_experience" id="non"
-                                    value="non">
+                                <input class="form-check-input" type="radio" name="club_experience" id="non" value="non"
+                                    required>
                                 <label class="form-check-label" for="non">Non</label>
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <input type="text" class="form-control"
+                                    <input type="text" class="form-control" name="club_details"
                                         placeholder="Si oui, précisez le(s) club(s) et votre rôle"
                                         aria-label="Si oui, précisez le(s) club(s) et votre rôle">
                                 </div>
@@ -366,47 +369,50 @@
                             <label class="form-label">Quelles compétences ou expériences possédez-vous en lien avec le
                                 domaine du club ?</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="gestion_projet"
+                                <input class="form-check-input" type="checkbox" name="competences[]"
                                     value="gestion_projet">
                                 <label class="form-check-label" for="gestion_projet">Gestion de projet</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="communication"
+                                <input class="form-check-input" type="checkbox" name="competences[]"
                                     value="communication">
                                 <label class="form-check-label" for="communication">Communication</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="design_graphique"
+                                <input class="form-check-input" type="checkbox" name="competences[]"
                                     value="design_graphique">
                                 <label class="form-check-label" for="design_graphique">Design graphique</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="organisation_evenements"
+                                <input class="form-check-input" type="checkbox" name="competences[]"
                                     value="organisation_evenements">
                                 <label class="form-check-label" for="organisation_evenements">Organisation
                                     d’événements</label>
                             </div>
                             <label class="form-label">Dans quel département vous voyez-vous le plus ?</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="departement" id="comm" value="comm">
+                                <input class="form-check-input" type="radio" name="departement" id="comm" value="comm"
+                                    required>
                                 <label class="form-check-label" for="comm">Relations externes</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="departement" id="design"
-                                    value="design">
+                                    value="design" required>
                                 <label class="form-check-label" for="design">Projet</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="departement" id="event"
-                                    value="event">
+                                <input class="form-check-input" type="radio" name="departement" id="event" value="event"
+                                    required>
                                 <label class="form-check-label" for="event">Comm</label>
                             </div>
                             <div class="mb-3">
                                 <label for="exampleFormControlTextarea1" class="form-label">Pourquoi souhaitez-vous
                                     rejoindre ce club ?</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" name="motivation"
+                                    rows="3" required></textarea>
                             </div>
-                            <select class="form-select" aria-label="Default select example">
+                            <select class="form-select" name="interview_day" aria-label="Default select example"
+                                required>
                                 <option selected>Quand serez-vous disponible pour passer un entretien cette semaine ?
                                 </option>
                                 <option value="1">Lundi</option>
@@ -422,6 +428,7 @@
                                 <button class="btn btn-primary" type="submit">Submit form</button>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -480,7 +487,7 @@
     <!-- Fin de la Enactus Section -->
 
     <!-- ClubRadio Section -->
-    <section class="clubRadio-section club-section section-animation delay-1">
+    <section id="clubradio" class="clubRadio-section club-section section-animation delay-1">
         <img src="upload/clubradioessect.jpg" alt="ClubRadio Logo" class="club-logo">
         <h2 class="club-name">ClubRadio</h2>
         <div class="club-background">
@@ -493,34 +500,34 @@
                     <div class="modal-content">
                         <span class="close">&times;</span>
                         <h2>Rejoignez la famille ClubRadio Essect</h2>
-                        <form id="ClubRadioForm">
+                        <form id="ClubRadioForm" action="app\controllers\RequestController.php" method="POST">
                             <!-- Formulaire -->
                             <div class="row">
                                 <div class="col">
                                     <input type="text" class="form-control" placeholder="First name"
-                                        aria-label="First name">
+                                        aria-label="First name" name="first_name">
                                 </div>
                                 <div class="col">
                                     <input type="text" class="form-control" placeholder="Last name"
-                                        aria-label="Last name">
+                                        aria-label="Last name" name="last_name">
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Email address</label>
                                 <input type="email" class="form-control" id="exampleFormControlInput1"
-                                    placeholder="name@example.com">
+                                    placeholder="name@example.com" name="email">
                             </div>
                             <div class="mb-3">
                                 <label for="formGroupExampleInput" class="form-label">Phone Number</label>
                                 <input type="number" class="form-control" id="formGroupExampleInput"
-                                    placeholder="Example input placeholder">
+                                    placeholder="Example input placeholder" name="phone_number">
                             </div>
                             <div class="mb-3">
                                 <label for="basic-url" class="form-label">Your Facebook URL</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon3">https://example.com/users/</span>
                                     <input type="text" class="form-control" id="basic-url"
-                                        aria-describedby="basic-addon3 basic-addon4">
+                                        aria-describedby="basic-addon3 basic-addon4" name="facebook_url">
                                 </div>
                             </div>
                             <label class="form-label">Vous êtes en ?</label>
@@ -547,7 +554,7 @@
                             <div class="row">
                                 <div class="col">
                                     <input type="text" class="form-control" placeholder="Votre Specialité"
-                                        aria-label="Votre Specialité">
+                                        aria-label="Votre Specialité" name="specialite">
                                 </div>
                             </div>
                             <label class="form-label">Avez-vous déjà fait partie d'un club universitaire ou associatif
@@ -566,29 +573,29 @@
                                 <div class="col">
                                     <input type="text" class="form-control"
                                         placeholder="Si oui, précisez le(s) club(s) et votre rôle"
-                                        aria-label="Si oui, précisez le(s) club(s) et votre rôle">
+                                        aria-label="Si oui, précisez le(s) club(s) et votre rôle" name="club_details">
                                 </div>
                             </div>
                             <label class="form-label">Quelles compétences ou expériences possédez-vous en lien avec le
                                 domaine du club ?</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="gestion_projet"
-                                    value="gestion_projet">
+                                    value="gestion_projet" name="competences[]">
                                 <label class="form-check-label" for="gestion_projet">Gestion de projet</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="communication"
-                                    value="communication">
+                                <input class="form-check-input" type="checkbox" id="communication" value="communication"
+                                    name="competences[]">
                                 <label class="form-check-label" for="communication">Communication</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="design_graphique"
-                                    value="design_graphique">
+                                    value="design_graphique" name="competences[]">
                                 <label class="form-check-label" for="design_graphique">Design graphique</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="organisation_evenements"
-                                    value="organisation_evenements">
+                                    value="organisation_evenements" name="competences[]">
                                 <label class="form-check-label" for="organisation_evenements">Organisation
                                     d’événements</label>
                             </div>
@@ -608,16 +615,17 @@
                                 <label class="form-check-label" for="event">Diffusion</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="departement" id="event"
-                                    value="event">
-                                <label class="form-check-label" for="event">Finance</label>
+                                <input class="form-check-input" type="radio" name="departement" id="finance"
+                                    value="finance">
+                                <label class="form-check-label" for="finance">Finance</label>
                             </div>
                             <div class="mb-3">
                                 <label for="exampleFormControlTextarea1" class="form-label">Pourquoi souhaitez-vous
                                     rejoindre ce club ?</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                                    name="motivation"></textarea>
                             </div>
-                            <select class="form-select" aria-label="Default select example">
+                            <select class="form-select" aria-label="Default select example" name="interview_day">
                                 <option selected>Quand serez-vous disponible pour passer un entretien cette semaine ?
                                 </option>
                                 <option value="1">Lundi</option>
@@ -633,6 +641,7 @@
                                 <button class="btn btn-primary" type="submit">Submit form</button>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>
