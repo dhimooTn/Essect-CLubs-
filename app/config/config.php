@@ -6,5 +6,5 @@ define("DB_PASS", "");
 define("DB_NAME", "project_ds1");
 
 // Base URL
-define("BURL", "http://essect.clubs/");
+define("BURL", "http://localhost/PROJECT%20DS1/Essect-Clubs-Website/public/");
 ?>

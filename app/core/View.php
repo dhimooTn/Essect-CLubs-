@@ -34,7 +34,7 @@ class View
         }
         else 
         {
-            echo "this file : " .$this->view_file ."dose not exist ";
+            echo "this file : " .$this->view_file ." dose not exist ";
         }
     }
 }

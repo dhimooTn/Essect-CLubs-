@@ -5,7 +5,11 @@ class Modal {
         this.openButton = document.getElementById(openButtonId);
         this.closeButton = this.modal.querySelector(closeButtonClass);
 
-        this.init();
+        if (this.modal && this.openButton && this.closeButton) {
+            this.init();
+        } else {
+            console.error("Éléments de la modal non trouvés. Vérifiez les IDs et classes.");
+        }
     }
 
     init() {
@@ -36,7 +40,11 @@ class Modal {
 class FormValidator {
     constructor(formId) {
         this.form = document.getElementById(formId);
-        this.init();
+        if (this.form) {
+            this.init();
+        } else {
+            console.error(`Formulaire avec l'ID ${formId} non trouvé.`);
+        }
     }
 
     init() {
@@ -80,17 +88,12 @@ class LoginFormValidator extends FormValidator {
         const password = this.form.querySelector("#exampleInputPassword1").value;
 
         if (!email || !password) {
-            alert("Veuillez remplir tous les champs.");
+            alert("Veuillez remplir tous les champs obligatoires.");
             return false;
         }
 
         if (!this.validateEmail(email)) {
             alert("Veuillez entrer une adresse email valide.");
-            return false;
-        }
-
-        if (password.length < 8) {
-            alert("Le mot de passe doit contenir au moins 8 caractères.");
             return false;
         }
 
@@ -117,8 +120,8 @@ class InfoLabFormValidator extends FormValidator {
             return false;
         }
 
-        if (!this.validatePhone(phone) && phone.length !=8 ) {
-            alert("Veuillez entrer un numéro de téléphone valide.");
+        if (!this.validatePhone(phone)) {
+            alert("Veuillez entrer un numéro de téléphone valide (8 chiffres).");
             return false;
         }
 
@@ -134,6 +137,8 @@ class InfoLabFormValidator extends FormValidator {
 
 // Classe pour valider le formulaire Enactus
 class EnactusFormValidator extends InfoLabFormValidator {}
+
+// Classe pour valider le formulaire ClubRadio
 class ClubRadioFormValidator extends InfoLabFormValidator {}
 
 // Dark Mode Toggle
@@ -155,19 +160,24 @@ darkModeToggle.addEventListener('click', () => {
 // Initialisation des modales
 const loginModal = new Modal("loginModal", "openModal", ".close");
 const infolabModal = new Modal("modalInfolab", "openModalInfolab", ".close");
-const enactusModal = new Modal("modalEnactus", "openModalEnactus", ".close"); // Correction du nom de variable
-const clubRadioModal = new Modal("modalClubRadio", "openModalClubRadio", ".close"); // Correction du nom de variable
+const enactusModal = new Modal("modalEnactus", "openModalEnactus", ".close");
+const clubRadioModal = new Modal("modalClubRadio", "openModalClubRadio", ".close");
 
 // Initialisation des validateurs de formulaire
-const loginFormValidator = new LoginFormValidator("loginForm");
+//const loginFormValidator = new LoginFormValidator("loginForm");
 const infolabFormValidator = new InfoLabFormValidator("infolabForm");
-const enactusFormValidator = new EnactusFormValidator("EnactusForm"); // Correction du nom de variable
-const clubRadioFormValidator = new ClubRadioFormValidator("ClubRadioForm"); // Correction du nom de variable
+const enactusFormValidator = new EnactusFormValidator("EnactusForm");
+const clubRadioFormValidator = new ClubRadioFormValidator("ClubRadioForm");
+
+// Gestion du défilement fluide pour les ancres
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
-        });
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
     });
 });

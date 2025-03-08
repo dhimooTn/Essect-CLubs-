@@ -1,13 +1,15 @@
-<?php  include('C:\xampp\htdocs\Project Ds1\Essect-Clubs-Website\app\views\Layout\NavBar.php')  ?>
-<?php  include('C:\xampp\htdocs\Project Ds1\Essect-Clubs-Website\app\views\Layout\LoginSection.php')  ?>
+<?php include('app/views/Layout/NavBar.php'); ?>
+
+<?php  include('app\views\Layout\LoginSection.php')  ?>
+
     <!-- Header Section -->
     <header id="header" class="header-section section-animation">
         <a href="#infolab" class="discover-button">Discover</a>
     </header>
     <!-- Fin de la Header Section -->
-    <?php  include('C:\xampp\htdocs\Project Ds1\Essect-Clubs-Website\app\views\Layout\InfolabSection.php')  ?>
-    <?php  include('C:\xampp\htdocs\Project Ds1\Essect-Clubs-Website\app\views\Layout\EnactusSection.php')  ?>
-    <?php  include('C:\xampp\htdocs\Project Ds1\Essect-Clubs-Website\app\views\Layout\ClubRadio.php')  ?>
+    <?php  include('app\views\Layout\InfolabSection.php')  ?>
+    <?php  include('app\views\Layout\EnactusSection.php')  ?>
+    <?php  include('app\views\Layout\ClubRadio.php')  ?>
      <!-- Map Section -->
      <section id="map" class="section-animation">
         <h5><strong>Our location</strong></h5>
@@ -25,5 +27,5 @@
         </div>
     </section>
     <!-- Fin de la Map Section -->
-    <?php  include('C:\xampp\htdocs\Project Ds1\Essect-Clubs-Website\app\views\Layout\Footer.php')  ?>
+    <?php  include('app\views\Layout\Footer.php')  ?>
 
