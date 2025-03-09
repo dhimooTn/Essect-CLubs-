@@ -12,7 +12,7 @@
                     <div class="modal-content">
                         <span class="close">&times;</span>
                         <h2>Rejoignez la famille ClubRadio Essect</h2>
-                        <form id="ClubRadioForm" action="app\controllers\RequestController.php" method="POST">
+                        <form id="ClubRadioForm" action="<?php echo BURL; ?>Request/registre/3" method="POST">
                             <!-- Formulaire -->
                             <div class="row">
                                 <div class="col">

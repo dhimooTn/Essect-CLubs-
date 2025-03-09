@@ -13,7 +13,7 @@
                     <div class="modal-content">
                         <span class="close">&times;</span>
                         <h2>Rejoignez la famille InfoLAB</h2>
-                        <form id="infolabForm" action="app\controllers\RequestController.php" method="POST">
+                        <form id="infolabForm" action="<?php echo BURL; ?>Request/registre/1" method="POST">
                             <!-- Formulaire -->
                             <div class="row">
                                 <div class="col">
