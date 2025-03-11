@@ -9,11 +9,7 @@ class HomeController extends Controller
         
         $this->view('HomeView',[]);
     }
-    public function login()
-    {
-        // Afficher la vue AdminView
-        $this->view('AdminView', []);
-    }
+
 }
 
 ?>
