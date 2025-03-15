@@ -182,6 +182,10 @@
                         <h4>Users by Department</h4>
                         <canvas id="userDepartmentChart"></canvas>
                     </div>
+                    <div class="chart-container">
+                        <h4>Users by club</h4>
+                        <canvas id="userClubChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -282,31 +286,40 @@
                 data: {
                     labels: <?= json_encode(array_column($usersByNiveau, 'niveau')) ?>,
                     datasets: [{
-                        label: 'Number of Users',
+                        label: 'Number of Users by Niveau',
                         data: <?= json_encode(array_column($usersByNiveau, 'count')) ?>,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)'
-                        ],
-                        borderWidth: 1
+                        backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#FF33A6'],
                     }]
+                },
+                options: {
+                    responsive: true
                 }
             });
 
             const departmentCtx = document.getElementById('userDepartmentChart').getContext('2d');
             new Chart(departmentCtx, {
+                type: 'pie',
+                data: {
+                    labels: <?= json_encode(array_column($usersByDepartment, 'department_name')) ?>,
+                    datasets: [{
+                        label: 'Users by Department',
+                        data: <?= json_encode(array_column($usersByDepartment, 'count')) ?>,
+                        backgroundColor: ['#FFEB3B', '#FF9800', '#2196F3', '#4CAF50'],
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+
+            const clubCtx = document.getElementById('userClubChart').getContext('2d');
+            new Chart(clubCtx, {
                 type: 'bar',
                 data: {
-                    labels: <?= json_encode(array_column($usersByDepartment, 'department')) ?>,
+                    labels: <?= json_encode(array_column($usersByClub, 'club_name')) ?>,
                     datasets: [{
-                        label: 'Number of Users',
-                        data: <?= json_encode(array_column($usersByDepartment, 'count')) ?>,
+                        label: 'Users by Club',
+                        data: <?= json_encode(array_column($usersByClub, 'count')) ?>,
                         backgroundColor: 'rgba(153, 102, 255, 0.2)',
                         borderColor: 'rgba(153, 102, 255, 1)',
                         borderWidth: 1

@@ -68,34 +68,42 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($clubMembers as $member): ?>
+
+                    <?php if (!empty($clubMembers)): ?>
+                        <?php foreach ($clubMembers as $member): ?>
+                            <tr>
+                                <td><?= $member['id'] ?></td>
+                                <td><?= $member['first_name'] ?></td>
+                                <td><?= $member['last_name'] ?></td>
+                                <td><?= $member['email'] ?></td>
+                                <td><?= $member['role'] ?></td>
+                                <td>
+                                    <a href="javascript:void(0)" class="btn btn-sm btn-warning edit-btn"
+                                        data-id="<?= $member['id'] ?>"><i class="fas fa-edit"></i> Edit</a>
+                                    <a href="<?= BURL ?>President/deleteUser/<?= $member['id'] ?>"
+                                        class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</a>
+                                </td>
+                            </tr>
+                            <!-- Update Form for each member (initially hidden) -->
+                            <div id="updateUserForm_<?= $member['id'] ?>" class="update-form" style="display: none;">
+                                <form method="POST" action="<?= BURL ?>President/updateUser/<?= $member['id'] ?>">
+                                    <input type="text" name="first_name" value="<?= $member['first_name'] ?>" required>
+                                    <input type="text" name="last_name" value="<?= $member['last_name'] ?>" required>
+                                    <input type="email" name="email" value="<?= $member['email'] ?>" required>
+                                    <input type="password" name="password" placeholder="New Password">
+                                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Update</button>
+                                </form>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
                         <tr>
-                            <td><?= $member['id'] ?></td>
-                            <td><?= $member['first_name'] ?></td>
-                            <td><?= $member['last_name'] ?></td>
-                            <td><?= $member['email'] ?></td>
-                            <td><?= $member['role'] ?></td>
-                            <td>
-                                <a href="javascript:void(0)" class="btn btn-sm btn-warning edit-btn"
-                                    data-id="<?= $member['id'] ?>"><i class="fas fa-edit"></i> Edit</a>
-                                <a href="<?= BURL ?>President/deleteUser/<?= $member['id'] ?>"
-                                    class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</a>
-                            </td>
+                            <td colspan="6" class="text-center">No members found.</td>
                         </tr>
-                        <!-- Update Form for each member (initially hidden) -->
-                        <div id="updateUserForm_<?= $member['id'] ?>" class="update-form" style="display: none;">
-                            <form method="POST" action="<?= BURL ?>President/updateUser/<?= $member['id'] ?>">
-                                <input type="text" name="first_name" value="<?= $member['first_name'] ?>" required>
-                                <input type="text" name="last_name" value="<?= $member['last_name'] ?>" required>
-                                <input type="email" name="email" value="<?= $member['email'] ?>" required>
-                                <input type="password" name="password" placeholder="New Password">
-                                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Update</button>
-                            </form>
-                        </div>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
+
 
         <!-- Requests Content -->
         <div id="requestsContent" class="content-section">
@@ -111,38 +119,40 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($clubRequests as $request): ?>
+                    <?php if (!empty($clubRequests)): ?>
+                        <?php foreach ($clubRequests as $request): ?>
+                            <tr>
+                                <td><?= $request['id'] ?></td>
+                                <td><?= $request['first_name'] ?>         <?= $request['last_name'] ?></td>
+                                <td><?= $request['email'] ?></td>
+                                <td><?= $request['phone'] ?></td>
+                                <td><?= $request['facebook_url'] ?></td>
+                                <td><?= $request['niveau'] ?></td>
+                                <td><?= $request['specialite'] ?></td>
+                                <td><?= $request['club_exprience'] ?></td>
+                                <td><?= $request['previous_club'] ?></td>
+                                <td><?= $request['department'] ?></td>
+                                <td><?= $request['motivation'] ?></td>
+                                <td><?= $request['interview_availability'] ?></td>
+                                <td><a href="<?= $request['cv_path'] ?>" target="_blank">View CV</a></td>
+
+                                <td>
+                                    <a href="<?= BURL ?>President/acceptRequest/<?= $request['id'] ?>"
+                                        class="btn btn-sm btn-success"><i class="fas fa-check"></i> Accept</a>
+                                    <a href="<?= BURL ?>President/rejectRequest/<?= $request['id'] ?>"
+                                        class="btn btn-sm btn-danger"><i class="fas fa-times"></i> Reject</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
                         <tr>
-                            <td><?= $request['id'] ?></td>
-                            <td><?= $request['first_name'] ?>     <?= $request['last_name'] ?></td>
-                            <td><?= $request['email'] ?></td>
-                            <td><?= $request['phone'] ?></td>
-                            <td><?= $request['facebook_url'] ?></td>
-                            <td><?= $request['niveau'] ?></td>
-                            <td><?= $request['specialite'] ?></td>
-                            <td><?= $request['club_exprience'] ?></td>
-                            <td><?= $request['previous_club'] ?></td>
-                            <td><?= $request['department'] ?></td>
-                            <td><?= $request['motivation'] ?></td>
-                            <td><?= $request['interview_availability'] ?></td>
-                            <td><?= $request['cv_path'] ?></td>
-
-
-
-
-
-
-                            <td>
-                                <a href="<?= BURL ?>President/acceptRequest/<?= $request['id'] ?>"
-                                    class="btn btn-sm btn-success"><i class="fas fa-check"></i> Accept</a>
-                                <a href="<?= BURL ?>President/rejectRequest/<?= $request['id'] ?>"
-                                    class="btn btn-sm btn-danger"><i class="fas fa-times"></i> Reject</a>
-                            </td>
+                            <td colspan="13" class="text-center">No requests found.</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
+
 
         <!-- BI Dashboard Content -->
         <div id="biDashboardContent" class="content-section">
@@ -150,8 +160,12 @@
             <div class="dashboard-container">
                 <h3>Club Statistics</h3>
                 <div class="stats">
-                    <div class="card"><i class="fas fa-users"></i> Total Members : <?= $totalMembers ?></div>
-                    <div class="card"><i class="fas fa-envelope"></i> Pending Requests : <?= $pendingRequests ?></div>
+                    <div class="card"><i class="fas fa-users"></i> Total Members :
+                        <?= $totalMembers ?>
+                    </div>
+                    <div class="card"><i class="fas fa-envelope"></i> Pending Requests :
+                        <?= $pendingRequests ?>
+                    </div>
                 </div>
 
                 <!-- Chart Row -->
@@ -166,7 +180,7 @@
                     </div>
                     <div class="chart-container">
                         <h4>Members by Role</h4>
-                        <canvas id="membersByRoleChart"></canvas>
+                        <canvas id="membersByDepartmentChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -272,14 +286,14 @@
                 }
             });
 
-            const roleCtx = document.getElementById('membersByRoleChart').getContext('2d');
+            const roleCtx = document.getElementById('membersByDepartmentChart').getContext('2d');
             new Chart(roleCtx, {
                 type: 'bar',
                 data: {
-                    labels: <?= json_encode(array_column($membersByRole, 'role')) ?>,
+                    labels: <?= json_encode(array_column($membersByDepartment, 'role')) ?>,
                     datasets: [{
                         label: 'Number of Members',
-                        data: <?= json_encode(array_column($membersByRole, 'count')) ?>,
+                        data: <?= json_encode(array_column($membersByDepartment, 'count')) ?>,
                         backgroundColor: 'rgba(153, 102, 255, 0.2)',
                         borderColor: 'rgba(153, 102, 255, 1)',
                         borderWidth: 1

@@ -6,7 +6,7 @@ require_once 'app/models/ClubModel.php';
 require_once 'app/config/config.php';
 require_once 'app/core/View.php';
 
-class AController extends Controller
+class AdminController extends Controller
 {
     private $userModel;
     private $clubModel;

@@ -72,7 +72,7 @@ class RequestModel
      */
     public function getPendingRequests($clubId)
     {
-        $query = "SELECT COUNT(*) AS total FROM requests WHERE club_id = ? AND status = 'pending'";
+        $query = "SELECT COUNT(*) AS total FROM requests WHERE club_id = ? ";
         $stmt = $this->db->prepare($query);
         if (!$stmt) {
             throw new Exception("Erreur de préparation : " . $this->db->error);
@@ -98,6 +98,34 @@ class RequestModel
     public function getClubRequests($clubId)
     {
         $query = "SELECT id, first_name, last_name, email, status FROM requests WHERE club_id = ?";
+        $stmt = $this->db->prepare($query);
+        if (!$stmt) {
+            throw new Exception("Erreur de préparation : " . $this->db->error);
+        }
+
+        $stmt->bind_param("i", $clubId);
+        if (!$stmt->execute()) {
+            throw new Exception("Erreur d'exécution : " . $stmt->error);
+        }
+
+        $result = $stmt->get_result();
+        $requests = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        return $requests;
+    }
+
+    /**
+     * Récupère toutes les demandes pour un club donné.
+     *
+     * @param int $clubId ID du club
+     * @return array Liste de toutes les demandes pour un club
+     */
+    public function getAllRequestsByClubId($clubId)
+    {
+        $query = "SELECT id, first_name, last_name, email, phone, facebook_url, niveau, 
+                  specialite, club_experience, previous_club, department, motivation, 
+                  interview_availability, cv_path, photo_path
+                  FROM requests WHERE club_id = ?";
         $stmt = $this->db->prepare($query);
         if (!$stmt) {
             throw new Exception("Erreur de préparation : " . $this->db->error);

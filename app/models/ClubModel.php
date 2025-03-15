@@ -173,6 +173,26 @@ class ClubModel {
         return true;
     }
 
+    // In UserModel.php
+
+    public function getClubIdByUserId($userId)
+    {
+        $sql = "SELECT club_id FROM users WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('i', $userId);
+
+        if (!$stmt->execute()) {
+            throw new Exception("Erreur d'exécution de la requête : " . $stmt->error);
+        }
+
+        $result = $stmt->get_result();
+        $clubId = $result->fetch_assoc(); // Fetch as associative array
+
+        $stmt->close();
+
+        return $clubId ? $clubId : null; // Return null if no result
+    }
+
     /**
      * Close the database connection when the object is destroyed.
      */

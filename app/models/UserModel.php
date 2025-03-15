@@ -18,7 +18,7 @@ class UserModel
             if (!$stmt) {
                 throw new Exception("Erreur de préparation : " . $this->db->error);
             }
-            if ($types) {
+            if (!empty($types)) {
                 $stmt->bind_param($types, ...$params);
             }
             if (!$stmt->execute()) {
@@ -42,7 +42,7 @@ class UserModel
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
         $stmt->close();
-        return $user;
+        return $user ?: null;
     }
 
     public function getAllUsers()
@@ -59,16 +59,12 @@ class UserModel
 
     public function getUserById($id)
     {
-        $stmt = $this->prepareAndExecute(
+        return $this->fetchSingleValue(
             "SELECT u.id, u.first_name, u.last_name, u.email, c.name AS club_name, u.role 
             FROM users u LEFT JOIN clubs c ON u.club_id = c.id WHERE u.id = ?",
             "i",
             $id
         );
-        if (!$stmt) return null;
-        $user = $stmt->get_result()->fetch_assoc();
-        $stmt->close();
-        return $user;
     }
 
     public function createUser($firstName, $lastName, $email, $password, $phone, $photoPath, $niveau, $specialite, $clubId, $role = 'member')
@@ -92,46 +88,34 @@ class UserModel
 
     private function clubExists($clubId)
     {
-        $stmt = $this->prepareAndExecute(
+        return (bool) $this->fetchSingleValue(
             "SELECT id FROM clubs WHERE id = ?",
             "i",
             $clubId
         );
-        if (!$stmt) return false;
-        $stmt->store_result();
-        $exists = $stmt->num_rows > 0;
-        $stmt->close();
-        return $exists;
     }
 
     public function updateUser($id, $firstName, $lastName, $email, $role)
     {
-        $stmt = $this->prepareAndExecute(
+        return (bool) $this->prepareAndExecute(
             "UPDATE users SET first_name = ?, last_name = ?, email = ?, role = ? WHERE id = ?",
             "ssssi",
             $firstName, $lastName, $email, $role, $id
         );
-        if (!$stmt) return false;
-        $stmt->close();
-        return true;
     }
 
     public function deleteUser($id)
     {
-        $stmt = $this->prepareAndExecute(
+        return (bool) $this->prepareAndExecute(
             "DELETE FROM users WHERE id = ?",
             "i",
             $id
         );
-        if (!$stmt) return false;
-        $stmt->close();
-        return true;
     }
 
     public function getTotalUsers()
     {
-        $result = $this->db->query("SELECT COUNT(*) AS total FROM users");
-        return $result ? $result->fetch_assoc()['total'] : 0;
+        return $this->fetchSingleValue("SELECT COUNT(*) AS total FROM users");
     }
 
     public function getUsersByRole()
@@ -201,6 +185,15 @@ class UserModel
         );
     }
 
+    private function fetchSingleValue($query, $types = "", ...$params)
+    {
+        $stmt = $this->prepareAndExecute($query, $types, ...$params);
+        if (!$stmt) return 0;
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $result ? (int) $result['total'] : 0;
+    }
+
     private function fetchGroupedData($query, $types = "", ...$params)
     {
         $stmt = $this->prepareAndExecute($query, $types, ...$params);
@@ -208,6 +201,37 @@ class UserModel
         $data = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
         return $data;
+    }
+
+    // Fetch users by club ID
+    public function getUsersByClubId($id) {
+        $sql = "SELECT * FROM users WHERE club_id = ?";
+        $stmt = $this->prepareAndExecute($sql, "i", $id);
+        if (!$stmt) return [];
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    // Fetch distinct levels (niveaux) by club ID
+    public function getNiveuByClubId($clubId)
+    {
+        $query = "SELECT DISTINCT niveau FROM users WHERE club_id = ?";
+        $stmt = $this->prepareAndExecute($query, "i", $clubId);
+        if (!$stmt) return [];
+        $result = $stmt->get_result();
+        $niveaux = $result->fetch_all(MYSQLI_ASSOC);
+        return $niveaux;
+    }
+
+    // Fetch distinct departments (specialite) by club ID
+    public function getDepartementByClubId($clubId)
+    {
+        $query = "SELECT DISTINCT specialite AS department FROM users WHERE club_id = ?";
+        $stmt = $this->prepareAndExecute($query, "i", $clubId);
+        if (!$stmt) return [];
+        $result = $stmt->get_result();
+        $departments = $result->fetch_all(MYSQLI_ASSOC);
+        return $departments;
     }
 }
 ?>
