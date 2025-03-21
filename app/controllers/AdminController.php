@@ -1,10 +1,10 @@
 <?php
 
-require_once 'app/core/Controller.php';
-require_once 'app/models/UserModel.php';
-require_once 'app/models/ClubModel.php';
-require_once 'app/config/config.php';
-require_once 'app/core/View.php';
+require_once CORE . 'Controller.php';
+require_once MODELS . 'UserModel.php';
+require_once MODELS . 'ClubModel.php';
+require_once CONFIG . 'config.php';
+require_once CORE . 'View.php';
 
 class AdminController extends Controller
 {

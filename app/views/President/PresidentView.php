@@ -21,6 +21,7 @@
             <li id="homeBtn"><i class="fas fa-home"></i> <span>Home</span></li>
             <li id="usersBtn"><i class="fas fa-users"></i> <span>Users</span></li>
             <li id="requestsBtn"><i class="fas fa-envelope"></i> <span>Requests</span></li>
+            <li id="eventsBtn"><i class="fas fa-calendar-alt"></i> <span>Events</span></li>
             <li id="biDashboardBtn"><i class="fas fa-chart-line"></i> <span>BI Dashboard</span></li>
             <li><a href="<?php echo BURL; ?>Session/logout" class="btn btn-danger btn-sm"><i
                         class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
@@ -41,6 +42,55 @@
                     <div class="card"><i class="fas fa-chart-line"></i> Club Activity : High</div>
                 </div>
             </div>
+        </div>
+
+        <!-- Events Content -->
+        <div id="eventsContent" class="content-section">
+            <h2><i class="fas fa-calendar-alt"></i> Manage Events</h2>
+            <button id="addEventBtn" class="btn btn-success"><i class="fas fa-plus"></i> Add Event</button>
+            <div id="addEventForm" style="display: none;">
+                <form method="POST" action="<?= BURL ?>President/addEvent">
+                    <input type="text" name="title" placeholder="Event Title" required>
+                    <textarea name="description" placeholder="Event Description"></textarea>
+                    <input type="datetime-local" name="date" placeholder="Event Date" required>
+                    <input type="text" name="location" placeholder="Event Location">
+                    <input type="hidden" name="club_id" value="<?= $users['club_id'] ?>">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+                </form>
+            </div>
+            <table class="table table-bordered mt-3">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                        <th>Location</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($events)): ?>
+                        <?php foreach ($events as $event): ?>
+                            <tr>
+                                <td><?= $event['id'] ?></td>
+                                <td><?= $event['title'] ?></td>
+                                <td><?= $event['description'] ?></td>
+                                <td><?= $event['date'] ?></td>
+                                <td><?= $event['location'] ?></td>
+                                <td>
+                                    <a href="<?= BURL ?>President/deleteEvent/<?= $event['id'] ?>"
+                                        class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="6" class="text-center">No events found.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         </div>
 
         <!-- Users Content -->
@@ -68,8 +118,6 @@
                     </tr>
                 </thead>
                 <tbody>
-
-
                     <?php if (!empty($clubMembers)): ?>
                         <?php foreach ($clubMembers as $member): ?>
                             <tr>
@@ -104,7 +152,6 @@
                 </tbody>
             </table>
         </div>
-
 
         <!-- Requests Content -->
         <div id="requestsContent" class="content-section">
@@ -164,20 +211,14 @@
             </table>
         </div>
 
-
-
         <!-- BI Dashboard Content -->
         <div id="biDashboardContent" class="content-section">
             <h2><i class="fas fa-chart-line"></i> BI Dashboard</h2>
             <div class="dashboard-container">
                 <h3>Club Statistics</h3>
                 <div class="stats">
-                    <div class="card"><i class="fas fa-users"></i> Total Members :
-                        <?= $totalMembers ?>
-                    </div>
-                    <div class="card"><i class="fas fa-envelope"></i> Pending Requests :
-                        <?= $pendingRequests ?>
-                    </div>
+                    <div class="card"><i class="fas fa-users"></i> Total Members : <?= $totalMembers ?></div>
+                    <div class="card"><i class="fas fa-envelope"></i> Pending Requests : <?= $pendingRequests ?></div>
                 </div>
 
                 <!-- Chart Row -->
@@ -192,7 +233,7 @@
                     </div>
                     <div class="chart-container">
                         <h4>Members by Role</h4>
-                        <canvas id="membersByDepartmentChart"></canvas>
+                        <canvas id="membersByRoleChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -235,6 +276,9 @@
             document.querySelector("#requestsBtn").addEventListener("click", function () {
                 showSection("#requestsContent");
             });
+            document.querySelector("#eventsBtn").addEventListener("click", function () {
+                showSection("#eventsContent");
+            });
             document.querySelector("#biDashboardBtn").addEventListener("click", function () {
                 showSection("#biDashboardContent");
             });
@@ -242,6 +286,11 @@
             // Toggle forms
             document.querySelector("#addUserBtn").addEventListener("click", function () {
                 let form = document.querySelector("#addUserForm");
+                form.style.display = (form.style.display === "none") ? "block" : "none";
+            });
+
+            document.querySelector("#addEventBtn").addEventListener("click", function () {
+                let form = document.querySelector("#addEventForm");
                 form.style.display = (form.style.display === "none") ? "block" : "none";
             });
 
@@ -298,7 +347,7 @@
                 }
             });
 
-            const roleCtx = document.getElementById('membersByDepartmentChart').getContext('2d');
+            const roleCtx = document.getElementById('membersByRoleChart').getContext('2d');
             new Chart(roleCtx, {
                 type: 'bar',
                 data: {

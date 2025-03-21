@@ -1,31 +1,45 @@
 <?php
+require_once 'vendor/autoload.php';
 
-require_once 'app/core/Controller.php';
-require_once 'app/models/UserModel.php';
-require_once 'app/models/RequestModel.php';
-require_once 'app/config/config.php';
-require_once 'app/core/View.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'C:\xampp\htdocs\Project Ds1\vendor\phpmailer\phpmailer\src\Exception.php';
+require 'C:\xampp\htdocs\Project Ds1\vendor\phpmailer\phpmailer\src\PHPMailer.php';
+require 'C:\xampp\htdocs\Project Ds1\vendor\phpmailer\phpmailer\src\SMTP.php';
+
+
+
+      // Update with the correct path
+
+require_once CORE . 'Controller.php';
+require_once MODELS . 'UserModel.php';
+require_once MODELS . 'RequestModel.php';
+require_once MODELS . 'EventModel.php';
+require_once CONFIG . 'config.php';
+require_once CORE . 'View.php';
 
 class PresidentController extends Controller
 {
     private $userModel;
     private $requestModel;
+    private $eventModel;
 
-    public function __construct() {
-        // Instantiate models
+    public function __construct()
+    {
         $this->userModel = new UserModel();
         $this->requestModel = new RequestModel();
+        $this->eventModel = new EventModel();
     }
 
-    public function index($id = 1) {  // Default value of $id if none provided
-        // Ensure $id is valid, if needed
+    public function index($id = 1)
+    {
         if (!is_numeric($id)) {
             $_SESSION['errorMessage'] = 'Invalid club ID.';
             header('Location: /president');
             exit();
         }
 
-        // Get data for club id
         $totalMembers = $this->userModel->getTotalMembers($id);
         $pendingRequests = $this->requestModel->getPendingRequests($id);
         $clubMembers = $this->userModel->getUsersByClubId($id);
@@ -37,33 +51,30 @@ class PresidentController extends Controller
             'totalMembers' => $totalMembers,
             'pendingRequests' => $pendingRequests,
             'clubMembers' => $clubMembers,
-            'request'=> $request,
+            'request' => $request,
             'membersByNiveau' => $membersByNiveau,
             'membersByDepartment' => $membersByDepartment
         ]);
     }
-    public function addUser() {
+
+    public function addUser()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $firstName = $_POST['first_name'];
-            $lastName = $_POST['last_name'];
-            $email = $_POST['email'];
+            $firstName = htmlspecialchars($_POST['first_name']);
+            $lastName = htmlspecialchars($_POST['last_name']);
+            $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
             $password = $_POST['password'];
 
-            // Validate password
             if (empty($password)) {
                 $_SESSION['errorMessage'] = 'Password cannot be empty.';
                 header('Location: /president/addUser');
                 exit();
             }
-            
-            // Hash the password
+
             $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-            
-            // Default values for role and clubId
             $role = 'member';
             $clubId = 1;
 
-            // Call model to add user
             $userAdded = $this->userModel->addUser($firstName, $lastName, $email, $hashedPassword, $role, $clubId);
 
             if ($userAdded) {
@@ -72,61 +83,51 @@ class PresidentController extends Controller
                 $_SESSION['errorMessage'] = 'Failed to add user.';
             }
 
-            // Redirect to the president dashboard
             header('Location: /president');
             exit();
         }
 
-        // Render the add user form view if not a POST request
         return $this->view('President/addUser');
     }
+
     public function updateUser($id)
     {
-        // Ensure that the userId is valid and numeric
         if (empty($id) || !is_numeric($id)) {
             $_SESSION['errorMessage'] = 'Invalid user ID.';
             header('Location: /president');
             exit();
         }
-    
-        // If the request method is POST, proceed with updating the user
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Retrieve form data
-            $firstName = $_POST['first_name'];
-            $lastName = $_POST['last_name'];
-            $email = $_POST['email'];
-    
-            // Determine if a new password was provided
+            $firstName = htmlspecialchars($_POST['first_name']);
+            $lastName = htmlspecialchars($_POST['last_name']);
+            $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+
             if (!empty($_POST['password'])) {
-                // Hash the new password before saving it
                 $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
             } else {
-                // Keep the existing password if no new password is provided
                 $user = $this->userModel->getUserById($id);
                 if (is_array($user)) {
-                    $password = $user['password'];  // Retain the existing password
+                    $password = $user['password'];
                 } else {
                     $_SESSION['errorMessage'] = 'Failed to retrieve user data.';
                     header('Location: /president');
                     exit();
                 }
             }
-    
-            // Call the model to update the user
+
             $userUpdated = $this->userModel->updateUser($id, $firstName, $lastName, $email, $password);
-    
+
             if ($userUpdated) {
                 $_SESSION['successMessage'] = 'User updated successfully!';
             } else {
                 $_SESSION['errorMessage'] = 'Failed to update user.';
             }
-    
-            // Redirect to the president dashboard
+
             header('Location: /president');
             exit();
         }
-    
-        // For GET requests, retrieve user details to pre-fill the form
+
         $user = $this->userModel->getUserById($id);
         if ($user) {
             return $this->view('President/updateUser', ['user' => $user]);
@@ -136,33 +137,29 @@ class PresidentController extends Controller
             exit();
         }
     }
-    
 
-    public function deleteUser($id) {
-        // Ensure that the id is valid before proceeding
+    public function deleteUser($id)
+    {
         if (empty($id) || !is_numeric($id)) {
             $_SESSION['errorMessage'] = 'Invalid user ID.';
             header('Location: /president');
             exit();
         }
 
-        // Call the model's delete function with the user ID
         $userDeleted = $this->userModel->deleteUser($id);
 
-        // Set the appropriate session message based on whether the deletion was successful
         if ($userDeleted) {
             $_SESSION['successMessage'] = 'User deleted successfully!';
         } else {
             $_SESSION['errorMessage'] = 'Failed to delete user.';
         }
 
-        // Redirect to the president dashboard
         header('Location: /president');
         exit();
     }
 
-    public function rejectRequest($id) {
-        // Validate the ID
+    public function rejectRequest($id)
+    {
         $requestId = filter_var($id, FILTER_VALIDATE_INT);
         if ($requestId === false || $requestId <= 0) {
             $_SESSION['errorMessage'] = 'Invalid request ID.';
@@ -171,7 +168,6 @@ class PresidentController extends Controller
         }
 
         try {
-            // Call the model to reject the request
             $requestRejected = $this->requestModel->rejectRequest($requestId);
 
             if ($requestRejected) {
@@ -183,13 +179,12 @@ class PresidentController extends Controller
             $_SESSION['errorMessage'] = 'Error: ' . $e->getMessage();
         }
 
-        // Redirect to the president dashboard
         header('Location: /president');
         exit();
     }
 
-    public function acceptRequest($id) {
-        // Validate the request ID
+    public function acceptRequest($id)
+    {
         $requestId = filter_var($id, FILTER_VALIDATE_INT);
         if (!$requestId || $requestId <= 0) {
             $_SESSION['errorMessage'] = 'Invalid request ID.';
@@ -197,7 +192,6 @@ class PresidentController extends Controller
             exit();
         }
 
-        // Fetch request details
         $request = $this->requestModel->getRequestById($requestId);
         if (!$request) {
             $_SESSION['errorMessage'] = 'Request not found.';
@@ -205,30 +199,24 @@ class PresidentController extends Controller
             exit();
         }
 
-        // Generate password and hash it
         $plainPassword = $this->userModel->generatePassword();
         $hashedPassword = password_hash($plainPassword, PASSWORD_BCRYPT);
 
-        // Prepare user data
         $userData = [
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
             'email' => $request['email'],
             'password' => $hashedPassword,
             'phone' => $request['phone'],
-            'photo_path' => $request['photo_path'],
             'niveau' => $request['niveau'],
             'specialite' => $request['specialite'],
             'department' => $request['department'],
             'club_id' => $request['club_id']
         ];
 
-        // Insert into users table
         if ($this->userModel->creatUser($userData)) {
-            // Delete request from requests table
             $this->requestModel->rejectRequest($requestId);
 
-            // Send an email with login credentials
             if ($this->sendAcceptanceEmail($request['email'], $request['first_name'], $plainPassword)) {
                 $_SESSION['successMessage'] = 'User accepted and email sent successfully!';
             } else {
@@ -238,38 +226,103 @@ class PresidentController extends Controller
             $_SESSION['errorMessage'] = 'Failed to add user.';
         }
 
-        // Redirect to the president dashboard
         header('Location: /president');
         exit();
     }
 
-    private function sendAcceptanceEmail($email, $name, $password) {
-        $subject = "Welcome to the Club!";
-        $message = "
-            <html>
-            <head>
-                <title>Welcome to the Club!</title>
-            </head>
-            <body>
-                <h2>Dear $name,</h2>
-                <p>Congratulations! Your membership request has been accepted.</p>
-                <p>Here are your login details:</p>
-                <ul>
-                    <li><strong>Email:</strong> $email</li>
-                    <li><strong>Password:</strong> $password</li>
-                </ul>
-                <p>Please log in and change your password as soon as possible.</p>
-                <p>Best regards,</p>
-                <p>The Club Team</p>
-            </body>
-            </html>
-        ";
+    private function sendAcceptanceEmail($email, $name, $password)
+    {
+        $mail = new PHPMailer(true);
+    
+        try {
+            // Configuration SMTP
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'boukhdhirdhia@gmail.com'; // Remplace avec ton e-mail
+            $mail->Password = 'binos 1234567890'; // Remplace par un mot de passe d'application Gmail
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 465;
+    
+            // Configuration du mail
+            $mail->setFrom('boukhdhirdhia@gmail.com', 'Club Team');
+            $mail->addAddress($email, $name);
+            $mail->CharSet = 'UTF-8';
+            $mail->isHTML(true);
+            $mail->Subject = 'Bienvenue au Club !';
+    
+            // Contenu HTML + texte brut
+            $mail->Body = "
+                <html>
+                <head>
+                    <title>Bienvenue au Club !</title>
+                </head>
+                <body>
+                    <h2>Bonjour $name,</h2>
+                    <p>Félicitations ! Votre demande d'adhésion a été acceptée.</p>
+                    <p>Voici vos identifiants :</p>
+                    <ul>
+                        <li><strong>Email :</strong> $email</li>
+                        <li><strong>Mot de passe :</strong> $password</li>
+                    </ul>
+                    <p>Merci de vous connecter et de changer votre mot de passe dès que possible.</p>
+                    <p>Cordialement,</p>
+                    <p>L'équipe du Club</p>
+                </body>
+                </html>
+            ";
+            $mail->AltBody = "Bonjour $name,\n\nVotre demande d'adhésion a été acceptée.\n\nIdentifiants :\nEmail: $email\nMot de passe: $password\n\nMerci de vous connecter et de changer votre mot de passe.\n\nL'équipe du Club.";
+    
+            // Envoi du mail
+            $mail->send();
+            return true;
+        } catch (Exception $e) {
+            error_log("Erreur d'envoi d'email : " . $mail->ErrorInfo);
+            return false;
+        }
+    }
+    
 
-        $headers = "MIME-Version: 1.0" . "\r\n";
-        $headers .= "Content-Type: text/html; charset=ISO-8859-1" . "\r\n";
-        $headers .= "From: club@example.com" . "\r\n";
+    public function addEvent()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['title'], $_POST['description'], $_POST['date'], $_POST['location'])) {
+                $title = htmlspecialchars($_POST['title']);
+                $description = htmlspecialchars($_POST['description']);
+                $date = htmlspecialchars($_POST['date']);
+                $location = htmlspecialchars($_POST['location']);
+                $club_id = $_SESSION['club_id'] ?? null;
 
-        return mail($email, $subject, $message, $headers);
+                if ($club_id) {
+                    $event_id = $this->eventModel->addEvent($title, $description, $date, $location, $club_id);
+                    $_SESSION[$event_id ? 'successMessage' : 'errorMessage'] = $event_id ? 'Event added successfully!' : 'Failed to add event.';
+                }
+            }
+        }
+        header('Location: /president');
+        exit();
+    }
+
+    public function events()
+    {
+        $club_id = $_SESSION['club_id'] ?? null;
+        if ($club_id) {
+            $events = $this->eventModel->getEvents($club_id);
+            include 'app/views/president/events.php';
+        } else {
+            $_SESSION['errorMessage'] = 'Club ID not found in session.';
+            header("Location: /president");
+            exit();
+        }
+    }
+
+    public function deleteEvent($event_id)
+    {
+        if (is_numeric($event_id)) {
+            $this->eventModel->deleteEvent($event_id);
+        }
+        header('Location: /president');
+        exit();
     }
 }
 ?>

@@ -1,10 +1,12 @@
 <?php
-require_once 'app/core/Controller.php';
-require_once 'app/models/UserModel.php';
-require_once 'app/models/ClubModel.php';
-require_once 'app/models/RequestModel.php';
-require_once 'app/config/config.php';
-require_once 'app/core/View.php';
+require_once CORE . 'Controller.php';
+require_once MODELS . 'UserModel.php';
+require_once MODELS . 'ClubModel.php';
+require_once MODELS . 'RequestModel.php';
+require_once CONFIG . 'config.php';
+require_once CORE . 'View.php';
+require_once MODELS . 'EventModel.php';
+
 
 class SessionController extends Controller
 {
@@ -15,7 +17,7 @@ class SessionController extends Controller
         }
     }
 
-    public function login()
+    public function login() 
     {
         if ($_SERVER["REQUEST_METHOD"] !== "POST") {
             $_SESSION['error'] = "Méthode non autorisée.";
@@ -35,6 +37,7 @@ class SessionController extends Controller
     
         $userModel = new UserModel();
         $clubModel = new ClubModel();
+        $eventModel = new EventModel();
         $requestModel = new RequestModel();
         $user = $userModel->getUserByEmail($email);
         $clubs = $clubModel->getAllClubs();
@@ -51,6 +54,7 @@ class SessionController extends Controller
         $request=$requestModel-> getAllRequestsByClubId($user['club_id']);
         $membersByNiveau=$userModel->getNiveauByClubId($user['club_id']);
         $membersByDepartment=$userModel->getDepartementByClubId($user['club_id']);
+        $events = $eventModel->getEvents($user['club_id']);
 
     
         if (!$user || $password != $user['password']) {
@@ -86,16 +90,11 @@ class SessionController extends Controller
                     'usersByRegistrationMonth' => $usersByRegistrationMonth
                 ]);
                 break;
-            case 'membre':
+            case 'member':
+                
                 $this->view('Membre/MembreView', [
                     'users' => $users,
-                    'clubs' => $clubs,
-                    'totalUsers' => $totalUsers,
-                    'usersByRole' => $usersByRole,
-                    'usersByNiveau' => $usersByNiveau,
-                    'usersByDepartment' => $usersByDepartment,
-                    'usersByClub' => $usersByClub,
-                    'usersByRegistrationMonth' => $usersByRegistrationMonth
+                    'events'=> $events
                 ]);
                 break;
             case 'president':
@@ -107,7 +106,9 @@ class SessionController extends Controller
                     'request'=> $request,
                     'totalUsers' => $totalUsers,
                     'membersByNiveau' => $membersByNiveau,
-                    'membersByDepartment' => $membersByDepartment
+                    'membersByDepartment' => $membersByDepartment,
+                    'events'=> $events,
+
             
                 ]);
                 break;

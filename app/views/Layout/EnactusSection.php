@@ -219,10 +219,10 @@
         </div>
     </div>
     <div class="club-social-links">
-        <a href="https://www.facebook.com/profile.php?id=100086193647142&locale=fr_FR" target="_blank">
+        <a href="https://www.facebook.com/enactusessectunis?locale=fr_FR" target="_blank">
             <img src="upload/face.png" alt="Facebook">
         </a>
-        <a href="https://www.instagram.com/infolab_essect/" target="_blank">
+        <a href="https://www.instagram.com/enactors.essect/" target="_blank">
             <img src="upload/insta.png" alt="Instagram">
         </a>
     </div>
