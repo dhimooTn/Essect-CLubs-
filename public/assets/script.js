@@ -1,4 +1,8 @@
 // Fonction pour récupérer un paramètre GET dans l'URL
+document.addEventListener("DOMContentLoaded", function () {
+    const navbar = document.querySelector(".navbar");
+    navbar.classList.add("visible");
+});
 function getParameterByName(name, url = window.location.href) {
     name = name.replace(/[\[\]]/g, '\\$&');
     let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),

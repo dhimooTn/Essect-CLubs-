@@ -48,7 +48,7 @@ class App
 
     /**
      * render controller and method and send parameters 
-     * @return function 
+     * @return void 
      */
 
     private function render()

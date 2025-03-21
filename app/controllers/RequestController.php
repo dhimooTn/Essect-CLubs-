@@ -4,10 +4,14 @@ require_once MODELS . 'RequestModel.php';
 
 class RequestController extends Controller
 {
+    protected $db;  // Instance de la base de données
     protected $requestModel;
 
     public function __construct()
     {
+        
+        $dbInstance = new Db();
+        $this->db = $dbInstance->connect();
         $this->requestModel = new RequestModel();
     }
 
@@ -24,12 +28,11 @@ class RequestController extends Controller
                 'niveau' => $_POST['niveau'] ?? '',
                 'specialite' => $_POST['specialite'] ?? '',
                 'club_experience' => $_POST['club_experience'] ?? '',
-                'previous_club' => $_POST['previous_club'] ?? '',
-                'department' => $_POST['department'] ?? '',
+                'previous_club' => $_POST['club_details'] ?? '',
+                'department' => $_POST['departement'] ?? '',
                 'motivation' => $_POST['motivation'] ?? '',
-                'interview_availability' => $_POST['interview_availability'] ?? '',
-                'cv_path' => $_FILES['cv']['name'] ?? '',
-                'photo_path' => $_FILES['photo']['name'] ?? '',
+                'interview_availability' => $_POST['entretien_jour'] ?? '',
+                'cv_path' => $_POST['cv'],
                 'club_id' => $club_id
             ];
 
@@ -54,4 +57,6 @@ class RequestController extends Controller
             header("Location: " . BURL);
         }
     }
+
 }
+?>

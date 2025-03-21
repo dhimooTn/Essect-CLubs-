@@ -69,6 +69,7 @@
                 </thead>
                 <tbody>
 
+
                     <?php if (!empty($clubMembers)): ?>
                         <?php foreach ($clubMembers as $member): ?>
                             <tr>
@@ -114,44 +115,55 @@
                         <th>#</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Status</th>
+                        <th>Phone</th>
+                        <th>Facebook URL</th>
+                        <th>Niveau</th>
+                        <th>Spécialité</th>
+                        <th>Club Experience</th>
+                        <th>Previous Club</th>
+                        <th>Department</th>
+                        <th>Motivation</th>
+                        <th>Interview Availability</th>
+                        <th>CV</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (!empty($clubRequests)): ?>
-                        <?php foreach ($clubRequests as $request): ?>
+                    <?php if (!empty($request)): ?>
+                        <?php foreach ($request as $requests): ?>
                             <tr>
-                                <td><?= $request['id'] ?></td>
-                                <td><?= $request['first_name'] ?>         <?= $request['last_name'] ?></td>
-                                <td><?= $request['email'] ?></td>
-                                <td><?= $request['phone'] ?></td>
-                                <td><?= $request['facebook_url'] ?></td>
-                                <td><?= $request['niveau'] ?></td>
-                                <td><?= $request['specialite'] ?></td>
-                                <td><?= $request['club_exprience'] ?></td>
-                                <td><?= $request['previous_club'] ?></td>
-                                <td><?= $request['department'] ?></td>
-                                <td><?= $request['motivation'] ?></td>
-                                <td><?= $request['interview_availability'] ?></td>
-                                <td><a href="<?= $request['cv_path'] ?>" target="_blank">View CV</a></td>
-
+                                <td><?= htmlspecialchars($requests['id']) ?></td>
+                                <td><?= htmlspecialchars($requests['first_name']) . " " . htmlspecialchars($requests['last_name']) ?>
+                                </td>
+                                <td><?= htmlspecialchars($requests['email']) ?></td>
+                                <td><?= htmlspecialchars($requests['phone']) ?></td>
+                                <td><a href="<?= htmlspecialchars($requests['facebook_url']) ?>" target="_blank">Profile</a>
+                                </td>
+                                <td><?= htmlspecialchars($requests['niveau']) ?></td>
+                                <td><?= htmlspecialchars($requests['specialite']) ?></td>
+                                <td><?= htmlspecialchars($requests['club_experience']) ?></td>
+                                <td><?= htmlspecialchars($requests['previous_club']) ?></td>
+                                <td><?= htmlspecialchars($requests['department']) ?></td>
+                                <td><?= htmlspecialchars($requests['motivation']) ?></td>
+                                <td><?= htmlspecialchars($requests['interview_availability']) ?></td>
+                                <td><a href="<?= htmlspecialchars($requests['cv_path']) ?>" target="_blank">View CV</a></td>
                                 <td>
-                                    <a href="<?= BURL ?>President/acceptRequest/<?= $request['id'] ?>"
+                                    <a href="<?= BURL ?>President/acceptRequest/<?= $requests['id'] ?>"
                                         class="btn btn-sm btn-success"><i class="fas fa-check"></i> Accept</a>
-                                    <a href="<?= BURL ?>President/rejectRequest/<?= $request['id'] ?>"
+                                    <a href="<?= BURL ?>President/rejectRequest/<?= $requests['id'] ?>"
                                         class="btn btn-sm btn-danger"><i class="fas fa-times"></i> Reject</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="13" class="text-center">No requests found.</td>
+                            <td colspan="14" class="text-center">No requests found.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
         </div>
+
 
 
         <!-- BI Dashboard Content -->

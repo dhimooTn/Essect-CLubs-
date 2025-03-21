@@ -151,6 +151,23 @@
             </div>
         </div>
     </div>
+    <div class="fondation">
+        <h3>our-foundation</h3>
+        <p>Fondation
+        Enactus ESSECT fondé  le20 novembre 2010 au sein de l'ESSECT. c'est une équipe dynamique de 90 étudiants passionnés par l'entrepreneuriat social.
+       
+
+            📍 Club Universitaire
+            📅 15 ans d’ancienneté
+            👥 90 Membres </p>
+    </div>
+    <div class="our-mission">
+        <h3>our-mission</h3>
+        <p>
+        Nous développons des projets innovants pour impacter positivement notre société et favoriser le développement durable.
+
+        </p>
+    </div>
     <div class="our-team-section">
         <h3>Our Team</h3>
         <div class="team-members">
@@ -200,6 +217,14 @@
                 <p>RH & Project Assistant</p>
             </div>
         </div>
+    </div>
+    <div class="club-social-links">
+        <a href="https://www.facebook.com/profile.php?id=100086193647142&locale=fr_FR" target="_blank">
+            <img src="upload/face.png" alt="Facebook">
+        </a>
+        <a href="https://www.instagram.com/infolab_essect/" target="_blank">
+            <img src="upload/insta.png" alt="Instagram">
+        </a>
     </div>
 </section>
 <!-- Fin de la Enactus Section -->

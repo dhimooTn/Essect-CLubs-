@@ -34,7 +34,7 @@ class UserModel
     public function getUserByEmail($email)
     {
         $stmt = $this->prepareAndExecute(
-            "SELECT id, first_name, last_name, password, role FROM users WHERE email = ?",
+            "SELECT * FROM users WHERE email = ?",
             "s",
             $email
         );
@@ -61,7 +61,7 @@ class UserModel
     {
         return $this->fetchSingleValue(
             "SELECT u.id, u.first_name, u.last_name, u.email, c.name AS club_name, u.role 
-            FROM users u LEFT JOIN clubs c ON u.club_id = c.id WHERE u.id = ?",
+            FROM users u LEFT JOIN clubs c ON u.club_id = c.id WHERE u.club_id = ?",
             "i",
             $id
         );
@@ -95,22 +95,30 @@ class UserModel
         );
     }
 
-    public function updateUser($id, $firstName, $lastName, $email, $role)
+    public function updateUser($id, $firstName, $lastName, $email, $password)
     {
         return (bool) $this->prepareAndExecute(
-            "UPDATE users SET first_name = ?, last_name = ?, email = ?, role = ? WHERE id = ?",
+            "UPDATE users SET first_name = ?, last_name = ?, email = ?, password = ? WHERE id = ?",
             "ssssi",
-            $firstName, $lastName, $email, $role, $id
+            $firstName, $lastName, $email, $password, $id
         );
     }
 
     public function deleteUser($id)
     {
-        return (bool) $this->prepareAndExecute(
+        $stmt = $this->prepareAndExecute(
             "DELETE FROM users WHERE id = ?",
             "i",
             $id
         );
+        
+        if (!$stmt) {
+            return false;
+        }
+        
+        $affectedRows = $stmt->affected_rows;
+        $stmt->close();
+        return ($affectedRows > 0);
     }
 
     public function getTotalUsers()
@@ -151,12 +159,18 @@ class UserModel
 
     public function getTotalMembers($clubId)
     {
-        return $this->fetchSingleValue(
-            "SELECT COUNT(*) AS total FROM users WHERE club_id = ?", 
-            "i", 
+        $stmt = $this->prepareAndExecute(
+            "SELECT COUNT(*) AS total FROM users WHERE club_id = ?",
+            "i",
             $clubId
         );
+        if (!$stmt) return 0; // Return 0 if query fails
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+        $stmt->close();
+        return $user['total'] ?? 0; // Ensure it always returns a number
     }
+    
 
     public function getMembersByDepartment($clubId)
     {
@@ -233,5 +247,46 @@ class UserModel
         $departments = $result->fetch_all(MYSQLI_ASSOC);
         return $departments;
     }
+    // Add this method to your UserModel class
+public function addUser($firstName, $lastName, $email, $password, $role, $clubId)
+{
+    $sql = "INSERT INTO users (first_name, last_name, email, password, club_id, role) VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = $this->prepareAndExecute($sql, "ssssis", $firstName, $lastName, $email, $password, $clubId, $role);
+    
+    if (!$stmt) {
+        return false;
+    }
+    
+    $stmt->close();
+    return $this->db->insert_id;
+}
+public function generatePassword($length = 8) {
+    return bin2hex(random_bytes($length / 2)); // Example: "8f6a2b1c"
+}
+
+// Insert a new user into the database
+public function creatUser($data) {
+    $stmt = $this->db->prepare("
+        INSERT INTO users (first_name, last_name, email, password, phone, photo_path, niveau, specialite, department, club_id, role) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'member')
+    ");
+    $stmt->bind_param(
+        "sssssssssi",
+        $data['first_name'],
+        $data['last_name'],
+        $data['email'],
+        $data['password'],
+        $data['phone'],
+        $data['photo_path'],
+        $data['niveau'],
+        $data['specialite'],
+        $data['department'],
+        $data['club_id']
+    );
+    $insertSuccess = $stmt->execute();
+    $stmt->close();
+    return $insertSuccess;
+}
+
 }
 ?>

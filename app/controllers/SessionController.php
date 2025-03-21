@@ -45,12 +45,12 @@ class SessionController extends Controller
         $usersByDepartment = $userModel->getUsersByDepartment();
         $usersByClub = $userModel->getUsersByClub();
         $usersByRegistrationMonth = $userModel->getUsersByRegistrationMonth();
-        $totalMembers = $userModel->getTotalMembers($user['id']);
-        $pendingRequests = $requestModel->getPendingRequests($user['id']);
-        $clubMembers = $userModel->getUsersByClubId($user['id']);
-        $request=$requestModel-> getAllRequestsByClubId($user['id']);
-        $membersByNiveau=$userModel->getNiveuByClubId($user['id']);
-        $membersByDepartment=$userModel->getDepartementByClubId($user['id']);
+        $totalMembers = $userModel->getTotalMembers($user['club_id']);
+        $pendingRequests = $requestModel->getPendingRequests($user['club_id']);
+        $clubMembers = $userModel->getUsersByClubId($user['club_id']);
+        $request=$requestModel-> getAllRequestsByClubId($user['club_id']);
+        $membersByNiveau=$userModel->getNiveuByClubId($user['club_id']);
+        $membersByDepartment=$userModel->getDepartementByClubId($user['club_id']);
 
     
         if (!$user || $password != $user['password']) {
@@ -103,7 +103,7 @@ class SessionController extends Controller
                 $this->view('President/PresidentView', [
                     'totalMembers' => $totalMembers,
                     'pendingRequests' => $pendingRequests,
-                    'clubMember' => $clubMembers,
+                    'clubMembers' => $clubMembers,
                     'request'=> $request,
                     'totalUsers' => $totalUsers,
                     'membersByNiveau' => $membersByNiveau,

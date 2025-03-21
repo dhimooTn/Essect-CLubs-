@@ -25,8 +25,8 @@ class RequestModel
             INSERT INTO requests (
                 first_name, last_name, email, phone, facebook_url, niveau, specialite, 
                 club_experience, previous_club, department, motivation, interview_availability, 
-                cv_path, photo_path, club_id
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                cv_path, club_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ";
 
         $stmt = $this->db->prepare($query);
@@ -34,31 +34,35 @@ class RequestModel
             throw new Exception("Erreur de préparation : " . $this->db->error);
         }
 
-        if (!$stmt->bind_param(
-            "ssssssssisssssi",
-            $data['first_name'],
-            $data['last_name'],
-            $data['email'],
-            $data['phone'],
-            $data['facebook_url'],
-            $data['niveau'],
-            $data['specialite'],
-            $data['club_experience'],
-            $data['previous_club'],
-            $data['department'],
-            $data['motivation'],
-            $data['interview_availability'],
-            $data['cv_path'],
-            $data['photo_path'],
-            $data['club_id']
-        )) {
+        // Binding des paramètres avec les bons types
+        if (
+            !$stmt->bind_param(
+                "ssssssssissssi", // 14 paramètres, correspond bien aux données
+                $data['first_name'],
+                $data['last_name'],
+                $data['email'],
+                $data['phone'],
+                $data['facebook_url'],
+                $data['niveau'],
+                $data['specialite'],
+                $data['club_experience'],
+                $data['previous_club'],
+                $data['department'],
+                $data['motivation'],
+                $data['interview_availability'],
+                $data['cv_path'],
+                $data['club_id'] // Assurez-vous que ce paramètre est bien un entier
+            )
+        ) {
             throw new Exception("Erreur lors du binding des paramètres : " . $stmt->error);
         }
 
+        // Exécution de la requête
         if (!$stmt->execute()) {
             throw new Exception("Erreur d'exécution : " . $stmt->error);
         }
 
+        // Récupération de l'ID de la demande insérée
         $insertId = $this->db->insert_id;
         $stmt->close();
         return $insertId;
@@ -72,13 +76,13 @@ class RequestModel
      */
     public function getPendingRequests($clubId)
     {
-        $query = "SELECT COUNT(*) AS total FROM requests WHERE club_id = ? ";
+        $query = "SELECT COUNT(*) AS total FROM requests WHERE club_id = ?";
         $stmt = $this->db->prepare($query);
         if (!$stmt) {
             throw new Exception("Erreur de préparation : " . $this->db->error);
         }
 
-        $stmt->bind_param("i", $clubId);
+        $stmt->bind_param("i", $clubId); // Le clubId est un entier
         if (!$stmt->execute()) {
             throw new Exception("Erreur d'exécution : " . $stmt->error);
         }
@@ -103,7 +107,7 @@ class RequestModel
             throw new Exception("Erreur de préparation : " . $this->db->error);
         }
 
-        $stmt->bind_param("i", $clubId);
+        $stmt->bind_param("i", $clubId); // Le clubId est un entier
         if (!$stmt->execute()) {
             throw new Exception("Erreur d'exécution : " . $stmt->error);
         }
@@ -122,16 +126,13 @@ class RequestModel
      */
     public function getAllRequestsByClubId($clubId)
     {
-        $query = "SELECT id, first_name, last_name, email, phone, facebook_url, niveau, 
-                  specialite, club_experience, previous_club, department, motivation, 
-                  interview_availability, cv_path, photo_path
-                  FROM requests WHERE club_id = ?";
+        $query = "SELECT * FROM requests WHERE club_id = ?";
         $stmt = $this->db->prepare($query);
         if (!$stmt) {
             throw new Exception("Erreur de préparation : " . $this->db->error);
         }
 
-        $stmt->bind_param("i", $clubId);
+        $stmt->bind_param("i", $clubId); // Le clubId est un entier
         if (!$stmt->execute()) {
             throw new Exception("Erreur d'exécution : " . $stmt->error);
         }
@@ -141,5 +142,44 @@ class RequestModel
         $stmt->close();
         return $requests;
     }
+    /**
+ * Supprime une demande de la base de données.
+ *
+ * @param int $requestId ID de la demande à supprimer
+ * @return bool True si la suppression a réussi, False sinon
+ */
+public function rejectRequest($requestId)
+{
+    $query = "DELETE FROM requests WHERE id = ?";
+
+    $stmt = $this->db->prepare($query);
+    if (!$stmt) {
+        throw new Exception("Erreur de préparation : " . $this->db->error);
+    }
+
+    $stmt->bind_param("i", $requestId); // Le requestId est un entier
+    if (!$stmt->execute()) {
+        throw new Exception("Erreur d'exécution : " . $stmt->error);
+    }
+
+    $affectedRows = $stmt->affected_rows;
+    $stmt->close();
+    
+    // Si aucune ligne n'a été affectée, cela signifie que la suppression a échoué (requestId introuvable)
+    return $affectedRows > 0;
+}
+public function getRequestById($requestId) {
+    $stmt = $this->db->prepare("
+        SELECT first_name, last_name, email, phone, niveau, specialite, department, club_id 
+        FROM requests WHERE id = ?
+    ");
+    $stmt->bind_param("i", $requestId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $request = $result->fetch_assoc();
+    $stmt->close();
+    return $request;
+}
+
 }
 ?>

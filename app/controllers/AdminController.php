@@ -108,7 +108,7 @@ class AdminController extends Controller
 
         // Get user details for pre-filled form (if GET request)
         $user = $this->userModel->getUserById($userId);
-        return $this->view('Admin/editUser', ['user' => $user]);
+        return $this->view('Admin/updateUser', ['user' => $user]);
     }
 
     // Method to delete a user (by user ID)
