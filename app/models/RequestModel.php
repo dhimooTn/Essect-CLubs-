@@ -14,6 +14,17 @@ class RequestModel
     }
 
     /**
+     * Enregistre une erreur dans le fichier log.
+     *
+     * @param string $message Le message d'erreur à enregistrer
+     */
+    private function logError($message)
+    {
+        // Enregistrement des erreurs dans un fichier log
+        file_put_contents('errors.log', date('Y-m-d H:i:s') . ' - ' . $message . PHP_EOL, FILE_APPEND);
+    }
+
+    /**
      * Insère une nouvelle demande dans la table `requests`.
      *
      * @param array $data Les données de la demande
@@ -21,6 +32,29 @@ class RequestModel
      */
     public function insertRequest($data)
     {
+        // Validation des données
+        if (empty($data['first_name']) || empty($data['last_name']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            throw new Exception("Les données sont invalides.");
+        }
+    
+        // Vérifier si l'email existe déjà
+        $checkEmailQuery = "SELECT COUNT(*) FROM requests WHERE email = :email";
+        $stmt = $this->db->prepare($checkEmailQuery);
+        $stmt->bindParam(':email', $data['email']);
+        
+        try {
+            $stmt->execute();
+            $emailExists = $stmt->fetchColumn();
+    
+            if ($emailExists) {
+                throw new Exception("L'email est déjà utilisé.");
+            }
+        } catch (PDOException $e) {
+            $this->logError("Erreur lors de la vérification de l'email: " . $e->getMessage());
+            throw new Exception("Erreur lors de la vérification de l'email: " . $e->getMessage());
+        }
+    
+        // Requête d'insertion
         $query = "
             INSERT INTO requests (
                 first_name, last_name, email, phone, facebook_url, niveau, specialite, 
@@ -28,16 +62,11 @@ class RequestModel
                 cv_path, club_id
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ";
-
-        $stmt = $this->db->prepare($query);
-        if (!$stmt) {
-            throw new Exception("Erreur de préparation : " . $this->db->error);
-        }
-
-        // Binding des paramètres avec les bons types
-        if (
-            !$stmt->bind_param(
-                "ssssssssissssi", // 14 paramètres, correspond bien aux données
+    
+        try {
+            $stmt = $this->db->prepare($query);
+            // Binding des paramètres avec les bons types
+            $stmt->execute([
                 $data['first_name'],
                 $data['last_name'],
                 $data['email'],
@@ -51,22 +80,18 @@ class RequestModel
                 $data['motivation'],
                 $data['interview_availability'],
                 $data['cv_path'],
-                $data['club_id'] // Assurez-vous que ce paramètre est bien un entier
-            )
-        ) {
-            throw new Exception("Erreur lors du binding des paramètres : " . $stmt->error);
+                $data['club_id']
+            ]);
+    
+            // Récupération de l'ID de la demande insérée
+            $insertId = $this->db->lastInsertId();
+            return $insertId;
+        } catch (PDOException $e) {
+            $this->logError("Erreur lors de l'insertion de la demande: " . $e->getMessage());
+            throw new Exception("Erreur lors de l'insertion de la demande: " . $e->getMessage());
         }
-
-        // Exécution de la requête
-        if (!$stmt->execute()) {
-            throw new Exception("Erreur d'exécution : " . $stmt->error);
-        }
-
-        // Récupération de l'ID de la demande insérée
-        $insertId = $this->db->insert_id;
-        $stmt->close();
-        return $insertId;
     }
+    
 
     /**
      * Récupère le nombre total de demandes en attente pour un club donné.
@@ -79,17 +104,19 @@ class RequestModel
         $query = "SELECT COUNT(*) AS total FROM requests WHERE club_id = ?";
         $stmt = $this->db->prepare($query);
         if (!$stmt) {
-            throw new Exception("Erreur de préparation : " . $this->db->error);
+            $this->logError("Erreur de préparation : " . implode(" ", $this->db->errorInfo()));
+            throw new Exception("Erreur de préparation : " . implode(" ", $this->db->errorInfo()));
         }
 
-        $stmt->bind_param("i", $clubId); // Le clubId est un entier
+        $stmt->bindValue(1, $clubId, PDO::PARAM_INT); // Le clubId est un entier
         if (!$stmt->execute()) {
-            throw new Exception("Erreur d'exécution : " . $stmt->error);
+            $this->logError("Erreur d'exécution : " . implode(" ", $stmt->errorInfo()));
+            throw new Exception("Erreur d'exécution : " . implode(" ", $stmt->errorInfo()));
         }
 
-        $result = $stmt->get_result();
-        $total = $result->fetch_assoc()['total'];
-        $stmt->close();
+        $stmt->execute();
+        $total = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        $stmt = null;
         return $total;
     }
 
@@ -104,17 +131,20 @@ class RequestModel
         $query = "SELECT id, first_name, last_name, email, status FROM requests WHERE club_id = ?";
         $stmt = $this->db->prepare($query);
         if (!$stmt) {
-            throw new Exception("Erreur de préparation : " . $this->db->error);
+            $this->logError("Erreur de préparation : " . implode(" ", $this->db->errorInfo()));
+            throw new Exception("Erreur de préparation : " . implode(" ", $this->db->errorInfo()));
         }
 
-        $stmt->bind_param("i", $clubId); // Le clubId est un entier
+        $stmt->bindValue(1, $clubId, PDO::PARAM_INT); // Le clubId est un entier
         if (!$stmt->execute()) {
-            throw new Exception("Erreur d'exécution : " . $stmt->error);
+            $errorInfo = $stmt->errorInfo();
+            $this->logError("Erreur d'exécution : " . implode(" ", $errorInfo));
+            throw new Exception("Erreur d'exécution : " . implode(" ", $errorInfo));
         }
 
-        $result = $stmt->get_result();
-        $requests = $result->fetch_all(MYSQLI_ASSOC);
-        $stmt->close();
+        $stmt->execute();
+        $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = null;
         return $requests;
     }
 
@@ -129,57 +159,69 @@ class RequestModel
         $query = "SELECT * FROM requests WHERE club_id = ?";
         $stmt = $this->db->prepare($query);
         if (!$stmt) {
-            throw new Exception("Erreur de préparation : " . $this->db->error);
+            $this->logError("Erreur de préparation : " . implode(" ", $this->db->errorInfo()));
+            throw new Exception("Erreur de préparation : " . implode(" ", $this->db->errorInfo()));
         }
 
-        $stmt->bind_param("i", $clubId); // Le clubId est un entier
+        $stmt->bindValue(1, $clubId, PDO::PARAM_INT); // Le clubId est un entier
         if (!$stmt->execute()) {
-            throw new Exception("Erreur d'exécution : " . $stmt->error);
+            $this->logError("Erreur d'exécution : " . implode(" ", $stmt->errorInfo()));
+            throw new Exception("Erreur d'exécution : " . implode(" ", $stmt->errorInfo()));
         }
 
-        $result = $stmt->get_result();
-        $requests = $result->fetch_all(MYSQLI_ASSOC);
-        $stmt->close();
+        $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = null;
         return $requests;
     }
+
     /**
- * Supprime une demande de la base de données.
- *
- * @param int $requestId ID de la demande à supprimer
- * @return bool True si la suppression a réussi, False sinon
- */
-public function rejectRequest($requestId)
-{
-    $query = "DELETE FROM requests WHERE id = ?";
+     * Supprime une demande de la base de données.
+     *
+     * @param int $requestId ID de la demande à supprimer
+     * @return bool True si la suppression a réussi, False sinon
+     */
+    public function rejectRequest($requestId)
+    {
+        $query = "DELETE FROM requests WHERE id = ?";
 
-    $stmt = $this->db->prepare($query);
-    if (!$stmt) {
-        throw new Exception("Erreur de préparation : " . $this->db->error);
+        $stmt = $this->db->prepare($query);
+        if (!$stmt) {
+            $this->logError("Erreur de préparation : " . implode(" ", $this->db->errorInfo()));
+            throw new Exception("Erreur de préparation : " . implode(" ", $this->db->errorInfo()));
+        }
+
+        $stmt->bindValue(1, $requestId, PDO::PARAM_INT); // Le requestId est un entier
+        if (!$stmt->execute()) {
+            $errorInfo = $stmt->errorInfo();
+            $this->logError("Erreur d'exécution : " . implode(" ", $errorInfo));
+            throw new Exception("Erreur d'exécution : " . implode(" ", $errorInfo));
+        }
+
+        $affectedRows = $stmt->rowCount();
+        $stmt = null;
+        
+        // Si aucune ligne n'a été affectée, cela signifie que la suppression a échoué (requestId introuvable)
+        return $affectedRows > 0;
     }
 
-    $stmt->bind_param("i", $requestId); // Le requestId est un entier
-    if (!$stmt->execute()) {
-        throw new Exception("Erreur d'exécution : " . $stmt->error);
+    /**
+     * Récupère les détails d'une demande par son ID.
+     *
+     * @param int $requestId ID de la demande
+     * @return array|false Les détails de la demande ou false si non trouvée
+     */
+    public function getRequestById($requestId)
+    {
+        $stmt = $this->db->prepare("
+            SELECT first_name, last_name, email, phone, niveau, specialite, department, club_id 
+            FROM requests WHERE id = ?
+        ");
+        $stmt->bindValue(1, $requestId, PDO::PARAM_INT);
+        $stmt->execute();
+        $stmt->execute();
+        $request = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt = null;
+        return $request;
     }
-
-    $affectedRows = $stmt->affected_rows;
-    $stmt->close();
-    
-    // Si aucune ligne n'a été affectée, cela signifie que la suppression a échoué (requestId introuvable)
-    return $affectedRows > 0;
-}
-public function getRequestById($requestId) {
-    $stmt = $this->db->prepare("
-        SELECT first_name, last_name, email, phone, niveau, specialite, department, club_id 
-        FROM requests WHERE id = ?
-    ");
-    $stmt->bind_param("i", $requestId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $request = $result->fetch_assoc();
-    $stmt->close();
-    return $request;
-}
-
 }
 ?>

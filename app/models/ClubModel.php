@@ -13,38 +13,25 @@ class ClubModel {
      * Get all clubs.
      */
     public function getAllClubs() {
-        // Requête SQL corrigée
-        $query = "SELECT id, name FROM clubs ORDER BY id ASC"; // Trier par ID en ordre croissant
+        $query = "SELECT id, name FROM clubs ORDER BY id ASC"; // Sort by ID in ascending order
     
-        // Préparation de la requête
+        // Prepare the query
         $stmt = $this->db->prepare($query);
     
-        // Vérification de la préparation de la requête
-        if (!$stmt) {
-            throw new Exception("Erreur de préparation de la requête : " . $this->db->error);
-        }
-    
-        // Exécution de la requête
+        // Execute the query
         if (!$stmt->execute()) {
-            throw new Exception("Erreur d'exécution de la requête : " . $stmt->error);
+            throw new Exception("Error executing the query: " . $stmt->errorInfo()[2]);
         }
     
-        // Récupération des résultats
-        $result = $stmt->get_result();
+        // Fetch the results
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll();
     
-        // Vérification des résultats
         if (!$result) {
-            throw new Exception("Erreur lors de la récupération des résultats : " . $stmt->error);
+            throw new Exception("Error fetching the results: " . implode(", ", $stmt->errorInfo()));
         }
     
-        // Extraction des données sous forme de tableau associatif
-        $clubs = $result->fetch_all(MYSQLI_ASSOC);
-    
-        // Fermeture du statement
-        $stmt->close();
-    
-        // Retour des clubs
-        return $clubs;
+        return $result; // Return the clubs
     }
 
     /**
@@ -53,22 +40,12 @@ class ClubModel {
     public function getClubById($id) {
         $query = "SELECT id, name FROM clubs WHERE id = ?";
         $stmt = $this->db->prepare($query);
-
-        if (!$stmt) {
-            throw new Exception("Erreur de préparation de la requête : " . $this->db->error);
+        
+        if (!$stmt->execute([$id])) {
+            throw new Exception("Error executing the query: " . implode(", ", $stmt->errorInfo()));
         }
 
-        $stmt->bind_param("i", $id);
-
-        if (!$stmt->execute()) {
-            throw new Exception("Erreur d'exécution de la requête : " . $stmt->error);
-        }
-
-        $result = $stmt->get_result();
-        $club = $result->fetch_assoc();
-
-        // Close statement
-        $stmt->close();
+        $club = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $club;
     }
@@ -77,75 +54,47 @@ class ClubModel {
      * Add a new club.
      */
     public function addClub($name) {
-        // Check if name is empty
         if (empty($name)) {
-            throw new Exception("Le nom du club ne peut pas être vide.");
+            throw new Exception("The club name cannot be empty.");
         }
-    
+
         // Check if the club already exists
         $query = "SELECT COUNT(*) FROM clubs WHERE name = ?";
         $stmt = $this->db->prepare($query);
-    
-        if (!$stmt) {
-            throw new Exception("Erreur de préparation de la requête de vérification : " . $this->db->error);
+        if (!$stmt->execute([$name])) {
+            throw new Exception("Error executing the check query: " . implode(", ", $stmt->errorInfo()));
         }
-    
-        $stmt->bind_param("s", $name);
-    
-        if (!$stmt->execute()) {
-            throw new Exception("Erreur d'exécution de la requête de vérification : " . $stmt->error);
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result['COUNT(*)'] > 0) {
+            throw new Exception("A club with this name already exists.");
         }
-    
-        $stmt->bind_result($count);
-        $stmt->fetch();
-    
-        // If the club already exists, throw an error
-        if ($count > 0) {
-            $stmt->close();
-            throw new Exception("Un club avec ce nom existe déjà.");
-        }
-    
-        // Proceed with the insert if the club doesn't exist
-        $stmt->close();
+
+        // Add the new club
         $query = "INSERT INTO clubs (name) VALUES (?)";
         $stmt = $this->db->prepare($query);
-    
-        if (!$stmt) {
-            throw new Exception("Erreur de préparation de la requête d'ajout : " . $this->db->error);
+        
+        if (!$stmt->execute([$name])) {
+            throw new Exception("Error executing the add query: " . implode(", ", $stmt->errorInfo()));
         }
-    
-        $stmt->bind_param("s", $name);
-    
-        if (!$stmt->execute()) {
-            throw new Exception("Erreur d'exécution de la requête d'ajout : " . $stmt->error);
-        }
-    
-        // Close statement
-        $stmt->close();
-    
+
         return true;
     }
-    
 
     /**
      * Update a club.
      */
     public function updateClub($id, $name) {
+        if (empty($name)) {
+            throw new Exception("The club name cannot be empty.");
+        }
+
         $query = "UPDATE clubs SET name = ? WHERE id = ?";
         $stmt = $this->db->prepare($query);
-
-        if (!$stmt) {
-            throw new Exception("Erreur de préparation de la requête : " . $this->db->error);
+        
+        if (!$stmt->execute([$name, $id])) {
+            throw new Exception("Error executing the update query: " . implode(", ", $stmt->errorInfo()));
         }
-
-        $stmt->bind_param("si", $name, $id);
-
-        if (!$stmt->execute()) {
-            throw new Exception("Erreur d'exécution de la requête : " . $stmt->error);
-        }
-
-        // Close statement
-        $stmt->close();
 
         return true;
     }
@@ -156,50 +105,35 @@ class ClubModel {
     public function deleteClub($id) {
         $query = "DELETE FROM clubs WHERE id = ?";
         $stmt = $this->db->prepare($query);
-
-        if (!$stmt) {
-            throw new Exception("Erreur de préparation de la requête : " . $this->db->error);
+        
+        if (!$stmt->execute([$id])) {
+            throw new Exception("Error executing the delete query: " . implode(", ", $stmt->errorInfo()));
         }
-
-        $stmt->bind_param("i", $id);
-
-        if (!$stmt->execute()) {
-            throw new Exception("Erreur d'exécution de la requête : " . $stmt->error);
-        }
-
-        // Close statement
-        $stmt->close();
 
         return true;
     }
 
-    // In UserModel.php
-
-    public function getClubIdByUserId($userId)
-    {
+    /**
+     * Get the club ID associated with a user ID.
+     */
+    public function getClubIdByUserId($userId) {
         $sql = "SELECT club_id FROM users WHERE id = ?";
         $stmt = $this->db->prepare($sql);
-        $stmt->bind_param('i', $userId);
-
-        if (!$stmt->execute()) {
-            throw new Exception("Erreur d'exécution de la requête : " . $stmt->error);
+        
+        if (!$stmt->execute([$userId])) {
+            throw new Exception("Error executing the query: " . implode(", ", $stmt->errorInfo()));
         }
 
-        $result = $stmt->get_result();
-        $clubId = $result->fetch_assoc(); // Fetch as associative array
+        $clubId = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $stmt->close();
-
-        return $clubId ? $clubId : null; // Return null if no result
+        return $clubId ? $clubId : null;
     }
 
     /**
      * Close the database connection when the object is destroyed.
      */
     public function __destruct() {
-        if ($this->db) {
-            $this->db->close();
-        }
+        $this->db = null;
     }
 }
 ?>

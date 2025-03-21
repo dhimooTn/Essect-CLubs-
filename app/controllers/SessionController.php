@@ -49,7 +49,7 @@ class SessionController extends Controller
         $pendingRequests = $requestModel->getPendingRequests($user['club_id']);
         $clubMembers = $userModel->getUsersByClubId($user['club_id']);
         $request=$requestModel-> getAllRequestsByClubId($user['club_id']);
-        $membersByNiveau=$userModel->getNiveuByClubId($user['club_id']);
+        $membersByNiveau=$userModel->getNiveauByClubId($user['club_id']);
         $membersByDepartment=$userModel->getDepartementByClubId($user['club_id']);
 
     

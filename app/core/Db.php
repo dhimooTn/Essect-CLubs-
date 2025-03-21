@@ -7,13 +7,12 @@ class Db
 
     public function connect()
     {
-        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
         try {
-            $this->db = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-            $this->db->set_charset("utf8mb4");
+            $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4';
+            $this->db = new PDO($dsn, DB_USER, DB_PASS);
+            $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $this->db;
-        } catch (mysqli_sql_exception $e) {
+        } catch (PDOException $e) {
             die("Erreur de connexion : " . $e->getMessage());
         }
     }

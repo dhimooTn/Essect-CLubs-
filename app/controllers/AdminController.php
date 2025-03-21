@@ -83,50 +83,71 @@ class AdminController extends Controller
     }
 
     // Method to edit a user (by user ID)
-    public function updateUser($params = []) {
-        $userId = $params[0];
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $firstName = $_POST['first_name'];
-            $lastName = $_POST['last_name'];
-            $email = $_POST['email'];
-            $role = $_POST['role'];
-
-            // Call model to update user
-            $userUpdated = $this->userModel->updateUser($userId, $firstName, $lastName, $email, $role);
-
-            if ($userUpdated) {
-                $_SESSION['successMessage'] = 'User updated successfully!';
-            } else {
-                $_SESSION['errorMessage'] = 'Failed to update user.';
-            }
-
-            // Redirect to the admin dashboard
-            header('Location: /admin');
-            exit();
-        }
-
-        // Get user details for pre-filled form (if GET request)
-        $user = $this->userModel->getUserById($userId);
-        return $this->view('Admin/updateUser', ['user' => $user]);
+    public function updateUser($userId)
+{
+    // Ensure that the userId is valid and numeric
+    if (empty($userId) || !is_numeric($userId)) {
+        $_SESSION['errorMessage'] = 'Invalid user ID.';
+        header('Location: /admin');
+        exit();
     }
 
-    // Method to delete a user (by user ID)
-    public function deleteUser($params = []) {
-        $userId = $params[0];
+    // If the request method is POST, proceed with updating the user
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Retrieve form data
+        $firstName = $_POST['first_name'];
+        $lastName = $_POST['last_name'];
+        $email = $_POST['email'];
+        $role = $_POST['role'];
 
-        $userDeleted = $this->userModel->deleteUser($userId);
+        // Call the model to update the user
+        $userUpdated = $this->userModel->updateUser($userId, $firstName, $lastName, $email, $role);
 
-        if ($userDeleted) {
-            $_SESSION['successMessage'] = 'User deleted successfully!';
+        if ($userUpdated) {
+            $_SESSION['successMessage'] = 'User updated successfully!';
         } else {
-            $_SESSION['errorMessage'] = 'Failed to delete user.';
+            $_SESSION['errorMessage'] = 'Failed to update user.';
         }
 
         // Redirect to the admin dashboard
         header('Location: /admin');
         exit();
     }
+
+    // For GET requests, retrieve user details to pre-fill the form
+    $user = $this->userModel->getUserById($userId);
+    if ($user) {
+        return $this->view('Admin/updateUser', ['user' => $user]);
+    } else {
+        $_SESSION['errorMessage'] = 'User not found.';
+        header('Location: /admin');
+        exit();
+    }
+}
+
+public function deleteUser($userId)
+{
+    // Ensure that the userId is valid and numeric
+    if (empty($userId) || !is_numeric($userId)) {
+        $_SESSION['errorMessage'] = 'Invalid user ID.';
+        header('Location: /admin');
+        exit();
+    }
+
+    // Call the model to delete the user
+    $userDeleted = $this->userModel->deleteUser($userId);
+
+    if ($userDeleted) {
+        $_SESSION['successMessage'] = 'User deleted successfully!';
+    } else {
+        $_SESSION['errorMessage'] = 'Failed to delete user.';
+    }
+
+    // Redirect to the admin dashboard
+    header('Location: /admin');
+    exit();
+}
+
 
     // Method to add a new club
     public function addClub() {
@@ -159,7 +180,7 @@ class AdminController extends Controller
             $clubName = $_POST['club_name'];
             $clubDescription = $_POST['club_description'];
 
-            $clubUpdated = $this->clubModel->updateClub($clubId, $clubName, $clubDescription);
+            $clubUpdated = $this->clubModel->updateClub($clubId, $clubName);
 
             if ($clubUpdated) {
                 $_SESSION['successMessage'] = 'Club updated successfully!';
