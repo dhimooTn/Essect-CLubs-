@@ -239,8 +239,8 @@ class PresidentController extends Controller
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'boukhdhirdhia@gmail.com'; // Remplace avec ton e-mail
-            $mail->Password = 'binos 1234567890'; // Remplace par un mot de passe d'application Gmail
+            $mail->Username = 'email@gmail.com'; // Remplace avec ton e-mail
+            $mail->Password = '********'; // Remplace par un mot de passe d'application Gmail
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 465;
     
